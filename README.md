@@ -1,5 +1,5 @@
 # Swagger TypeScript code generator
-
+test
 Node module to generate TypeScript code for Angular 2 based on Webapi meta data in Swagger v2 format.
 
 # Setup
