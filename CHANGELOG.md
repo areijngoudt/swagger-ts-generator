@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.4
+Readme: link changed to angular-swagger-form-field-sample
+
 ### 1.1.3
 Readme: link to angular2-swagger-form-field-sample added
 

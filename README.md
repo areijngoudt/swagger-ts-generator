@@ -1,9 +1,9 @@
 # Swagger TypeScript code generator
-Node module to generate TypeScript code for Angular 2 (and above) based on Webapi meta data in Swagger v2 format.
+Node module to generate TypeScript code for Angular (2 and above) based on Webapi meta data in Swagger v2 format.
 
-Use it in combination with the sibling package [angular2-swagger-form-field](https://www.npmjs.com/package/angular2-swagger-form-field) to implement reactive forms.
+Use it in combination with the sibling package [angular-swagger-form-field](https://www.npmjs.com/package/angular-swagger-form-field) to implement reactive forms.
 
-See [angular2-swagger-form-field-sample](https://github.com/areijngoudt/angular2-swagger-form-field-sample) for a sample how to use the generated classes.
+See [angular-swagger-form-field-sample](https://github.com/areijngoudt/angular-swagger-form-field-sample) for a sample how to use the generated classes.
 
 # Setup
 Download the moduel with npm:
@@ -145,7 +145,7 @@ gulp gen
 
 ## `validators.ts`
 The generated validators.ts is fixed (its always generated regardless of the Swagger). 
-It contains some extra validators to implement validation rules for the Swagger which are not part of the standard Angular 2 validators:
+It contains some extra validators to implement validation rules for the Swagger which are not part of the standard Angular validators:
 
 ```typescript
     maxValueValidator
@@ -178,7 +178,7 @@ It contains the base class for all generated models. The next members can be use
 
 ## `*.model.ts`
 For each definition in the Swagger an Interface and a Class are generated.
-The class contains the `$FormGroup` property to be used in the Angular 2 FormBuilder to make a model driven form.
+The class contains the `$FormGroup` property to be used in the Angular FormBuilder to make a model driven form.
 The controls in the `FormGroup` contain the validators which implement the validation rules from the Swagger defnition.
 
 Properties of an enum type are generated referencing this type which are generated in the next section.
