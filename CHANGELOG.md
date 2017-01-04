@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.3
+Readme: link to angular2-swagger-form-field-sample added
+
 ### 1.1.2
 Pushed this package to public github repo
 
