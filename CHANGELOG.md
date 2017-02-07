@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.5
+gulp.config: config.files defined
+
 ### 1.1.4
 Readme: link changed to angular-swagger-form-field-sample
 
