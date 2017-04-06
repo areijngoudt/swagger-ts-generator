@@ -47,16 +47,18 @@ export abstract class BaseModel {
     }
 
     protected fillModelArray<T>(object: BaseModel, key: string, values: Array<T>, type = undefined): void {
-        object[key] = new Array<T>();
-        for(let value of values) {
-            if (type) {
-                object[key].push(new type(value));
-            } else {
-                object[key].push(value);
+        if (values) {
+            object[key] = new Array<T>();
+            for(let value of values) {
+                if (type) {
+                    object[key].push(new type(value));
+                } else {
+                    object[key].push(value);
+                }
             }
+            // generate FormArray control elements
+            this.fillFormArray<T>(key, object[key], type);
         }
-        // generate FormArray control elements
-        this.fillFormArray<T>(key, object[key], type);
     }
     protected fillFormArray<T>(key: string, modelValues: any, type = undefined): void {
         if (this._formGroup) {
