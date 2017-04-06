@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.6
+*.model.ts: if (values) check added to setValues
+
 ### 1.1.5
 gulp.config: config.files defined
 
