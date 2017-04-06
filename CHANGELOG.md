@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-### 1.1.6
+### 1.1.7
 *.model.ts: if (values) check added to setValues
 
 ### 1.1.5
