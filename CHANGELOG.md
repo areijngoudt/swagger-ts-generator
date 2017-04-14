@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.9
+*.model.ts: setFormGroupValues
+
 ### 1.1.7
 *.model.ts: if (values) check added to setValues
 
