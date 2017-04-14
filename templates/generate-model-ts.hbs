@@ -106,7 +106,7 @@ export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/i
     setFormGroupValues() {
 {{#properties}}
 {{#if isArray}}
-        this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', values.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+        this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
 {{else if isImportType}}
         this.{{name}}.setFormGroupValues();
 {{else}}
