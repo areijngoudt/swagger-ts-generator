@@ -111,7 +111,7 @@ export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/i
 {{else if isImportType}}
         this.{{name}}.setFormGroupValues();
 {{else}}
-        this._formGroup.controls.{{name}}.setValue(this.{{name});
+        this._formGroup.controls.{{name}}.setValue(this.{{name}});
 {{/if}}
 {{/properties}}
     }
