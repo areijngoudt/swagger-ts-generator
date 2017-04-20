@@ -97,8 +97,6 @@ export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/i
             this.fillFormArray<{{arrayTypeName}}>('{{name}}', this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
 {{/if}}
 {{/properties}}
-        } else {
-            this.setFormGroupValues();
         }
         return this._formGroup;
     }

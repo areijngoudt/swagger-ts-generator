@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.13
+*.model.ts: don't call setFormGroupValues in getFormGroup()
+
 ### 1.1.9
 *.model.ts: setFormGroupValues
 
