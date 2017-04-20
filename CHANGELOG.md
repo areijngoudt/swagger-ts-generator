@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.14
+*.model.ts: if (this._formGroup) in setFormGroupValues() {
+
 ### 1.1.13
 *.model.ts: don't call setFormGroupValues in getFormGroup()
 

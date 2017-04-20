@@ -90,7 +90,6 @@ export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/i
 {{/if}}
 {{/properties}}
             });
-
 {{#properties}}
 {{#if isArray}}
             // generate FormArray control elements
@@ -102,15 +101,17 @@ export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/i
     }
 
     setFormGroupValues() {
+        if (this._formGroup) {
 {{#properties}}
 {{#if isArray}}
-        this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
 {{else if isImportType}}
-        this.{{name}}.setFormGroupValues();
+            this.{{name}}.setFormGroupValues();
 {{else}}
-        this._formGroup.controls.{{name}}.setValue(this.{{name}});
+            this._formGroup.controls.{{name}}.setValue(this.{{name}});
 {{/if}}
 {{/properties}}
+        }
     }
 }
 {{/with}}
