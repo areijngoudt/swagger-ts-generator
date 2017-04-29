@@ -41,3 +41,22 @@ export const minValueValidator = (required: number) => {
         return null;
     };
 };
+
+// required must be the enum type to check
+export const enumValidator = (required: any) => {
+    return (control: FormControl) => {
+        if (control.value !== undefined) {
+            var actual = control.value;
+            if (!required[actual]) {
+                return {
+                    enum: {
+                        valid: false,
+                        required: required,
+                        actual: actual
+                    }
+                };
+            }
+        }
+        return null;
+    };
+};

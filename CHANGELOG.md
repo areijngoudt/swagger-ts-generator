@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.15
+enumValidator generated and used in *.model.ts classes
+
 ### 1.1.14
 *.model.ts: if (this._formGroup) in setFormGroupValues() {
 

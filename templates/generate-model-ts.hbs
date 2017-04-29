@@ -5,7 +5,7 @@
 /* tslint:disable */
 
 import { Validators, FormControl, FormGroup, FormArray, ValidatorFn } from '@angular/forms';
-import { minValueValidator, maxValueValidator } from '{{type.pathToRoot}}validators';
+import { minValueValidator, maxValueValidator, enumValidator } from '{{type.pathToRoot}}validators';
 import { BaseModel } from '{{type.pathToRoot}}base-model';
 
 {{#with type}}
@@ -108,7 +108,7 @@ export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/i
 {{else if isImportType}}
             this.{{name}}.setFormGroupValues();
 {{else}}
-            this._formGroup.controls.{{name}}.setValue(this.{{name}});
+            this._formGroup.controls['{{name}}'].setValue(this.{{name}});
 {{/if}}
 {{/properties}}
         }
