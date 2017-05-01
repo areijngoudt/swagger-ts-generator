@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.16
+enumValidator:  && control.value !== null
+
 ### 1.1.15
 enumValidator generated and used in *.model.ts classes
 
