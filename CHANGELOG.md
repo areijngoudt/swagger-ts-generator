@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.17
+enumValidator:  && control.value !== ''
+
 ### 1.1.16
 enumValidator:  && control.value !== null
 
