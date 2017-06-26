@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.18
+enumGenerator:  remove duplicate enum types (if both type and values are the same)
+
 ### 1.1.17
 enumValidator:  && control.value !== ''
 
