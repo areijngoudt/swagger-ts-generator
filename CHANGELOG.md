@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.20
+modelGenerator, enumGenerator: overrule generated type with /** type [type] */ in comment above property. Handy for reusing enums.
+
 ### 1.1.19
 enumGenerator:  remove console.log
 
