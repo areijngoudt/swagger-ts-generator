@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.22
+modelGenerator: now supportes enums which are defined with $ref
+
 ### 1.1.21
 modelGenerator, enumGenerator: enum array is now supported.
 
