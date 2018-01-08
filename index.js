@@ -19,6 +19,7 @@ module.exports.generateTSFiles = generateTSFiles;
 *                 .modelFolder: the name of the folder (path) to generate the models in.
                                 each model class is generated in its own file.
 *                 .enumTSFile: the name of the enum TS file including path
+*                 .enumI18NHtmlFile: the name of the HTML file including path to generate enum values for translation.
 *                 .enumLanguageFiles: array with the names of the enum languages file including path
 *                 .modelModuleName: the name of the model module (aka namespace)
 *                 .enumModuleName: the name of the enum module (aka namespace)
@@ -34,6 +35,7 @@ function generateTSFiles(swaggerFileName, options) {
 
     modelGenerator.generateModelTSFiles(swagger, options);
     enumGenerator.generateEnumTSFile(swagger, options);
+    enumGenerator.generateEnumI18NHtmlFile(swagger, options);
     enumGenerator.generateEnumLanguageFiles(swagger, options);
 }
 
