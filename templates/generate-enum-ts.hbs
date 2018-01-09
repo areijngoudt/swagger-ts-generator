@@ -8,9 +8,9 @@
 // (see https://blog.rsuter.com/how-to-implement-an-enum-with-string-values-in-typescript/)
 {{#enumTypeCollection}}
 export enum {{type}} {
-{{#values}}
-    {{this}} = <any>"{{this}}",
-{{/values}}
+{{#valuesAndLabels}}
+    {{value}} = <any>"{{value}}",
+{{/valuesAndLabels}}
 }
 
 {{/enumTypeCollection}}

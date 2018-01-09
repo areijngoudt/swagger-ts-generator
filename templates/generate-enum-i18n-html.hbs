@@ -7,9 +7,9 @@
 <div class="hidden">
 {{#enumTypeCollection}}
     <!-- {{type}} -->
-    {{#values}}
-    <span i18n="{{../type}}.{{this}}|ngx-translate">{{this}}</span>
-    {{/values}}
+    {{#valuesAndLabels}}
+    <span i18n="{{../type}}.{{value}}|ngx-translate">{{label}}</span>
+    {{/valuesAndLabels}}
 
 {{/enumTypeCollection}}
 </div>

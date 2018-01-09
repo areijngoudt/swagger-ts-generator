@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.23
+enumGenerator: option enumI18NHtmlFile added.
+
 ### 1.1.22
 modelGenerator: now supportes enums which are defined with $ref
 

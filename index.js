@@ -25,8 +25,12 @@ module.exports.generateTSFiles = generateTSFiles;
 *                 .enumModuleName: the name of the enum module (aka namespace)
 */
 function generateTSFiles(swaggerFileName, options) {
-    if (!_.isString(swaggerFileName)) { throw 'swaggerFileName must be defined'; }
-    if (!_.isObject(options)) { throw 'options must be defined'; }
+    if (!_.isString(swaggerFileName)) {
+        throw 'swaggerFileName must be defined';
+    }
+    if (!_.isObject(options)) {
+        throw 'options must be defined';
+    }
 
     let folder = path.normalize(options.modelFolder);
     // utils.removeFolder(folder);
@@ -35,7 +39,10 @@ function generateTSFiles(swaggerFileName, options) {
 
     modelGenerator.generateModelTSFiles(swagger, options);
     enumGenerator.generateEnumTSFile(swagger, options);
-    enumGenerator.generateEnumI18NHtmlFile(swagger, options);
-    enumGenerator.generateEnumLanguageFiles(swagger, options);
+    if (options.enumI18NHtmlFile) {
+        enumGenerator.generateEnumI18NHtmlFile(swagger, options);
+    }
+    if (options.enumLanguageFiles) {
+        enumGenerator.generateEnumLanguageFiles(swagger, options);
+    }
 }
-
