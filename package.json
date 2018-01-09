@@ -25,21 +25,21 @@
   "license": "ISC",
   "dependencies": {
     "fs": "0.0.2",
-    "handlebars": "^4.0.5",
-    "lodash": "^4.5.0",
-    "moment": "^2.11.2",
+    "handlebars": "^4.0.11",
+    "lodash": "^4.17.4",
+    "moment": "^2.20.1",
     "path": "^0.12.7"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-jsbeautifier": "^2.0.3",
-    "gulp-load-plugins": "^1.2.2",
+    "gulp-jsbeautifier": "^2.1.2",
+    "gulp-load-plugins": "^1.5.0",
     "gulp-notify": "^2.2.0",
-    "gulp-plumber": "^1.1.0",
+    "gulp-plumber": "^1.2.0",
     "gulp-streamify": "^1.0.2",
     "gulp-task-listing": "^1.0.1",
-    "request": "^2.72.0",
-    "vinyl-source-stream": "^1.1.0",
+    "request": "^2.83.0",
+    "vinyl-source-stream": "^1.1.2",
     "yargs": "^4.6.0"
   }
 }
