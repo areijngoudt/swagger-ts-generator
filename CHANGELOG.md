@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.25
+modelGenerator: removed console.log statement.
+
 ### 1.1.24
 modelGenerator: generate validators for 0 values.
 
