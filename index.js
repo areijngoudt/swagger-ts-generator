@@ -25,6 +25,8 @@ module.exports.generateTSFiles = generateTSFiles;
 *                 .enumModuleName: the name of the enum module (aka namespace)
 */
 function generateTSFiles(swaggerFileName, options) {
+    // console.log('swagger-ts-generator');
+
     if (!_.isString(swaggerFileName)) {
         throw 'swaggerFileName must be defined';
     }

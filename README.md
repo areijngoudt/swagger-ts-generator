@@ -58,6 +58,10 @@ function config() {
             namespacePrefixesToRemove: [
             ],
             typeNameSuffixesToRemove: [
+            ],
+            typesToFilter: [
+                'ModelAndView', // Springfox artifact
+                'View', // Springfox artifact
             ]
         }
     }
