@@ -1,6 +1,9 @@
 CHANGELOG
 =========
 
+### 1.1.24
+modelGenerator: generate validators for 0 values.
+
 ### 1.1.23
 enumGenerator: option enumI18NHtmlFile added.
 
