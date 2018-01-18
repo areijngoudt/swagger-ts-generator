@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+### 1.1.27
+modelGenerator, enumGenerator: options sortModelProperties and sortEnumTypes added.
+
+### 1.1.26
+modelGenerator, enumGenerator: option typesToFilter added.
+
 ### 1.1.25
 modelGenerator: removed console.log statement.
 
