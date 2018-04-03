@@ -3,10 +3,11 @@
  * Do not edit.
 */
 /* tslint:disable */
-
+{{#if generateClasses}}
 import { Validators, FormControl, FormGroup, FormArray, ValidatorFn } from '@angular/forms';
 import { minValueValidator, maxValueValidator, enumValidator } from '{{type.pathToRoot}}validators';
 import { BaseModel } from '{{type.pathToRoot}}base-model';
+{{/if}}
 
 {{#with type}}
     {{#if isSubType}}
@@ -21,11 +22,17 @@ import { {{importEnumType}} } from '{{../../enumRef}}';
     {{/if}}
 {{/properties}}
 
+{{#if generateClasses}}
 export interface I{{{typeName}}} {
+{{else}}
+export interface {{{typeName}}} {
+{{/if}}
 {{#properties}}
     {{name}}{{#unless validators.validation.required}}?{{/unless}}: {{{typeName}}};
 {{/properties}}
 }
+
+{{#if generateClasses}}
 
 export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/if}} extends BaseModel implements I{{{typeName}}} {
 {{#properties}}
@@ -35,9 +42,9 @@ export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/i
     {{name}}: {{{typeName}}};
 {{/properties}}
 
-    /** 
+    /**
      * constructor
-     * @param values Can be used to set a webapi response to this newly constructed model   
+     * @param values Can be used to set a webapi response to this newly constructed model
     */
     constructor(values?: any) {
         super();
@@ -55,7 +62,7 @@ export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/i
         }
     }
 
-    /** 
+    /**
      * set the values.
      * @param values Can be used to set a webapi response to this newly constructed model
     */
@@ -114,4 +121,6 @@ export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/i
         }
     }
 }
+
+{{/if}}
 {{/with}}
