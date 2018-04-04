@@ -37,7 +37,10 @@ function generateTSFiles(swaggerFileName, options) {
     let folder = path.normalize(options.modelFolder);
     // utils.removeFolder(folder);
 
-    let swagger = JSON.parse(fs.readFileSync(swaggerFileName, utils.ENCODING));
+    let swagger = JSON.parse(fs.readFileSync(swaggerFileName, utils.ENCODING).trim());
+
+    if(!options.hasOwnProperty("generateClasses"))
+        options.generateClasses = true;
 
     modelGenerator.generateModelTSFiles(swagger, options);
     enumGenerator.generateEnumTSFile(swagger, options);

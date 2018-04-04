@@ -14,13 +14,15 @@ export enum {{type}} {
 }
 
 {{/enumTypeCollection}}
+
+{{#if generateClasses}}
 /**
  * bundle of all enums for databinding to options, radio-buttons etc.
  * usage in component:
  *   import { AllEnums, minValueValidator, maxValueValidator } from '../../models/webapi';
  *
  *   @Component({
- *       ... 
+ *       ...
  *   })
  *   export class xxxComponent implements OnInit {
  *       allEnums = AllEnums;
@@ -46,3 +48,4 @@ export class AllEnums {
     {{type}} = {{type}};
 {{/enumTypeCollection}}
 }
+{{/if}}

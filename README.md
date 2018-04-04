@@ -16,6 +16,8 @@ npm install --save-dev swagger-ts-generator
 ## `gulp.config`
 Create a `gulp.config` file with the settings you want:
 
+* generateClasses (default: true)  - If this flag is set to false, the generator will output only interfaces and enums. It will not output classes and validators.
+
 ```javascript
 'use strict';
 
@@ -52,6 +54,7 @@ function config() {
                 folders.srcLanguagesFolder + 'nl.json',
                 folders.srcLanguagesFolder + 'en.json',
             ],
+            generateClasses: true,
             modelModuleName: 'webapi.models',
             enumModuleName: 'webapi.enums',
             enumRef: './enums',
