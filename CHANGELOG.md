@@ -1,6 +1,10 @@
 # CHANGELOG
 
-### 1.1.128
+### 1.1.30
+
+bugfix option generateClasses (classes were not generated anymore when set to true)
+
+### 1.1.28
 
 option generateClasses added
 
