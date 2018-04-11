@@ -22,7 +22,7 @@ import { {{importEnumType}} } from '{{../../enumRef}}';
     {{/if}}
 {{/properties}}
 
-{{#if generateClasses}}
+{{#if ../generateClasses}}
 export interface I{{{typeName}}} {
 {{else}}
 export interface {{{typeName}}} {
@@ -32,7 +32,7 @@ export interface {{{typeName}}} {
 {{/properties}}
 }
 
-{{#if generateClasses}}
+{{#if ../generateClasses}}
 
 export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/if}} extends BaseModel implements I{{{typeName}}} {
 {{#properties}}
