@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.1.31
+
+enum-i18n-html: convert label to PascalCasing when value is not uppercase or value.length > 3
+
 ### 1.1.30
 
 bugfix option generateClasses (classes were not generated anymore when set to true)
