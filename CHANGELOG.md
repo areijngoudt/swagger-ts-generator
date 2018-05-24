@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 1.1.33
+
+config: new setting subTypePropertyName added.
+Implementation of baseClasses changed
+
 ### 1.1.31
 
 enum-i18n-html: convert label to PascalCasing when value is not uppercase or value.length > 3

@@ -11,7 +11,7 @@ import { BaseModel } from '{{type.pathToRoot}}base-model';
 
 {{#with type}}
     {{#if isSubType}}
-import { {{baseType.typeName}} } from '{{baseImportFile}}';
+import { I{{baseType.typeName}} } from '{{baseImportFile}}';
     {{/if}}
 {{#properties}}
     {{#if isUniqueImportType}}
@@ -34,7 +34,7 @@ export interface {{{typeName}}} {
 
 {{#if ../generateClasses}}
 
-export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/if}} extends BaseModel implements I{{{typeName}}} {
+export class {{{typeName}}} extends BaseModel implements I{{{typeName}}} {{#if isSubType}}, I{{{baseType.typeName}}}{{/if}}  {
 {{#properties}}
     {{#if description}}
     /** {{{description}}} */
@@ -50,7 +50,7 @@ export class {{{typeName}}}{{#if isSubType}} extends {{{baseType.typeName}}}{{/i
         super();
 {{#if isSubType}}
 
-        this.$type = '{{{fullNamespace}}}.{{{typeName}}}';
+        this.{{{../subTypePropertyName}}} = '{{{fullTypeName}}}';
 {{/if}}
 {{#properties}}
     {{#if isComplexType}}
