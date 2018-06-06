@@ -1,5 +1,13 @@
 # CHANGELOG
 
+### 1.1.34
+
+`subTypes` now extend there `baseType` instead of `BaseModel`
+
+### 1.1.34
+
+forgot to push the changed `generate-model-ts.hsb`
+
 ### 1.1.33
 
 config: new setting subTypePropertyName added.

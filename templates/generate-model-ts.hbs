@@ -34,7 +34,7 @@ export interface {{{typeName}}} {
 
 {{#if ../generateClasses}}
 
-export class {{{typeName}}} extends BaseModel implements I{{{typeName}}} {{#if isSubType}}, I{{{baseType.typeName}}}{{/if}}  {
+export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{else}}BaseModel{{/if}} implements I{{{typeName}}}  {
 {{#properties}}
     {{#if description}}
     /** {{{description}}} */
@@ -107,6 +107,9 @@ export class {{{typeName}}} extends BaseModel implements I{{{typeName}}} {{#if i
         return this._formGroup;
     }
 
+    /**
+     * set the FormGroup values to the model values.
+    */
     setFormGroupValues() {
         if (this._formGroup) {
 {{#properties}}

@@ -1,2 +1,6 @@
 *.hbs
-generate-model-ts.hbs
+generate-barrel-ts.hbs
+generate-base-model-ts.hbs
+generate-enum-i18n-ts.hbs
+generate-enum-ts.hbs
+generate-validators-ts.hbs

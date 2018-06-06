@@ -8,9 +8,9 @@ import { ValidatorFn } from '@angular/forms';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
 
 export abstract class BaseModel {
-
+ 
     constructor() {
-        // define non enumerable properties so these are ommitted in JSON.stringify.
+        // define non enumerable properties so these are omitted in JSON.stringify.
         Object.defineProperty(this, "$formGroup", {
             get: this.getFormGroup,
             enumerable: false,
@@ -20,6 +20,17 @@ export abstract class BaseModel {
             writable: true,
         });
     }
+
+    /**
+     * set the values.
+     * @param values Can be used to set a webapi response to this newly constructed model
+    */
+    abstract setValues(values: any): void;
+
+    /**
+     * set the FormGroup values to the model values.
+    */
+    abstract setFormGroupValues();
 
     /** 
      * use $formGroup in angular's formBuilder to make a model driven (reactive) form. 
