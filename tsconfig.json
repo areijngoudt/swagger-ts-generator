@@ -2,14 +2,18 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
-        "outDir": "dist",
-        "sourceMap": true
+        "outDir": "./",
+        "sourceMap": false,
+        "declaration": true,
+        "typeRoots": [
+
+        ]
     },
     "files": [
         "./node_modules/@types/node/index.d.ts"
     ],
     "include": [
-        "lib/**/*.ts"
+        "src/**/*.ts"
     ],
     "exclude": [
         "node_modules"

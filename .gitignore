@@ -2,3 +2,8 @@ node_modules
 NULL.log
 .DS_Store
 .npm-debug.log
+
+# Compiled js
+lib
+index.js
+index.d.ts

@@ -2,8 +2,8 @@ import { readFileSync } from 'fs';
 import { isObject } from 'lodash';
 
 import { ENCODING } from './lib/utils';
-import { generateModelTSFiles } from './lib/modelGenerator';
-import { generateEnumTSFile, generateEnumI18NHtmlFile, generateEnumLanguageFiles } from './lib/enumGenerator';
+import { generateModelTSFiles } from './lib/model-generator';
+import { generateEnumTSFile, generateEnumI18NHtmlFile, generateEnumLanguageFiles } from './lib/enum-generator';
 
 /**
 * Generate TypeScript files based on the given SwaggerFile and some templates
