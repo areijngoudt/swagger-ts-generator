@@ -14,7 +14,7 @@ module.exports.generateTSFiles = generateTSFiles;
 /**
 * Generate TypeScript files based on the given SwaggerFile and some templates
 *
-* @param {string} swaggerFileName The fileName of the swagger.json file including path
+* @param {string} swaggerInput The fileName of the swagger.json file including path
 * @param {object} options Options which are used during generation
 *                 .modelFolder: the name of the folder (path) to generate the models in.
                                 each model class is generated in its own file.
@@ -24,20 +24,27 @@ module.exports.generateTSFiles = generateTSFiles;
 *                 .modelModuleName: the name of the model module (aka namespace)
 *                 .enumModuleName: the name of the enum module (aka namespace)
 */
-function generateTSFiles(swaggerFileName, options) {
-    // console.log('swagger-ts-generator');
+function generateTSFiles(swaggerInput, options) {
+    options = enrichConfig(options);
 
-    if (!_.isString(swaggerFileName)) {
+    if (!swaggerInput) {
         throw 'swaggerFileName must be defined';
     }
     if (!_.isObject(options)) {
         throw 'options must be defined';
     }
 
-    let folder = path.normalize(options.modelFolder);
-    // utils.removeFolder(folder);
+    const isFile = typeof swaggerInput === 'string';
+    let swagger = isFile
+        ? JSON.parse(fs.readFileSync(swaggerInput, utils.ENCODING).trim())
+        : swaggerInput;
 
-    let swagger = JSON.parse(fs.readFileSync(swaggerFileName, utils.ENCODING).trim());
+    if (typeof swagger !== 'object') {
+        throw new TypeError('The given swagger input is not of type object');
+    }
+
+    // let folder = path.normalize(options.modelFolder);
+    // utils.removeFolder(folder);
 
     if(!options.hasOwnProperty("generateClasses"))
         options.generateClasses = true;
@@ -50,4 +57,10 @@ function generateTSFiles(swaggerFileName, options) {
     if (options.enumLanguageFiles) {
         enumGenerator.generateEnumLanguageFiles(swagger, options);
     }
+}
+
+function enrichConfig(options) {
+    return Object.assign({
+        barrelFiles: true
+    }, options);
 }
