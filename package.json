@@ -27,7 +27,7 @@
   "dependencies": {
     "fs": "0.0.2",
     "handlebars": "^4.0.11",
-    "lodash-es": "^4.17.10",
+    "lodash": "^4.17.10",
     "moment": "^2.20.1",
     "path": "^0.12.7"
   },
