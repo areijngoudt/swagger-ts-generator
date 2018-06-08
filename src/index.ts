@@ -1,6 +1,8 @@
 import { readFileSync } from 'fs';
 import { isObject } from 'lodash';
 
+import { GeneratorOptions } from './bootstrap/options';
+import { Swagger } from './bootstrap/swagger';
 import { ENCODING } from './lib/utils';
 import { generateModelTSFiles } from './lib/model-generator';
 import { generateEnumTSFile, generateEnumI18NHtmlFile, generateEnumLanguageFiles } from './lib/enum-generator';
@@ -18,7 +20,7 @@ import { generateEnumTSFile, generateEnumI18NHtmlFile, generateEnumLanguageFiles
 *                 .modelModuleName: the name of the model module (aka namespace)
 *                 .enumModuleName: the name of the enum module (aka namespace)
 */
-export function generateTSFiles(swaggerInput, options) {
+export function generateTSFiles(swaggerInput: string | Swagger, options: GeneratorOptions) {
     options = enrichConfig(options);
 
     if (!swaggerInput) {
@@ -28,10 +30,11 @@ export function generateTSFiles(swaggerInput, options) {
         throw 'options must be defined';
     }
 
-    const isFile = typeof swaggerInput === 'string';
-    let swagger = isFile
-        ? JSON.parse(readFileSync(swaggerInput, ENCODING).trim())
+    let swagger = typeof swaggerInput === 'string'
+        ? JSON.parse(readFileSync(swaggerInput, ENCODING).trim()) as Swagger
         : swaggerInput;
+
+    console.log('SWAGGER', swagger);
 
     if (typeof swagger !== 'object') {
         throw new TypeError('The given swagger input is not of type object');
@@ -39,9 +42,6 @@ export function generateTSFiles(swaggerInput, options) {
 
     // let folder = path.normalize(options.modelFolder);
     // utils.removeFolder(folder);
-
-    if(!options.hasOwnProperty("generateClasses"))
-        options.generateClasses = true;
 
     generateModelTSFiles(swagger, options);
     generateEnumTSFile(swagger, options);
@@ -53,8 +53,10 @@ export function generateTSFiles(swaggerInput, options) {
     }
 }
 
-function enrichConfig(options) {
-    return Object.assign({
-        barrelFiles: true
-    }, options);
+function enrichConfig(options: GeneratorOptions) {
+    return {
+        barrelFiles: true,
+        generateClasses: true,
+        ...options
+    } as GeneratorOptions;
 }
