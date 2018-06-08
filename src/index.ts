@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { isObject } from 'lodash';
 
 import { GeneratorOptions } from './bootstrap/options';
@@ -6,6 +7,8 @@ import { Swagger } from './bootstrap/swagger';
 import { ENCODING } from './lib/utils';
 import { generateModelTSFiles } from './lib/model-generator';
 import { generateEnumTSFile, generateEnumI18NHtmlFile, generateEnumLanguageFiles } from './lib/enum-generator';
+
+const TEMPLATE_FOLDER = resolve(__dirname, 'templates');
 
 /**
 * Generate TypeScript files based on the given SwaggerFile and some templates
@@ -34,8 +37,6 @@ export function generateTSFiles(swaggerInput: string | Swagger, options: Generat
         ? JSON.parse(readFileSync(swaggerInput, ENCODING).trim()) as Swagger
         : swaggerInput;
 
-    console.log('SWAGGER', swagger);
-
     if (typeof swagger !== 'object') {
         throw new TypeError('The given swagger input is not of type object');
     }
@@ -54,9 +55,20 @@ export function generateTSFiles(swaggerInput: string | Swagger, options: Generat
 }
 
 function enrichConfig(options: GeneratorOptions) {
+    const templates = options.templates;
+    delete options.templates;
     return {
         barrelFiles: true,
         generateClasses: true,
+        templates: {
+            validators: `${TEMPLATE_FOLDER}/generate-validators-ts.hbs`,
+            baseModel: `${TEMPLATE_FOLDER}/generate-base-model-ts.hbs`,
+            models: `${TEMPLATE_FOLDER}/generate-model-ts.hbs`,
+            barrel: `${TEMPLATE_FOLDER}/generate-barrel-ts.hbs`,
+            enum: `${TEMPLATE_FOLDER}/generate-enum-ts.hbs`,
+            enumLanguage: `${TEMPLATE_FOLDER}/generate-enum-i18n-html.hbs`,
+            ...templates
+        },
         ...options
     } as GeneratorOptions;
 }

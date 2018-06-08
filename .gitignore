@@ -4,6 +4,5 @@ NULL.log
 .npm-debug.log
 
 # Compiled js
-lib
-index.js
-index.d.ts
+**/*.js
+**/*.d.ts

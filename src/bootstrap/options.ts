@@ -15,4 +15,13 @@ export interface GeneratorOptions {
     typesToFilter?: string[];
     sortModelProperties?: boolean;
     sortEnumTypes?: boolean;
+
+    templates?: {
+        validators?: string;
+        baseModel?: string;
+        models?: string;
+        barrel?: string;
+        enum?: string;
+        enumLanguage?: string;
+    }
 }
