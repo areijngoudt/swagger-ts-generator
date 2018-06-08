@@ -4,6 +4,7 @@ export interface GeneratorOptions {
 
     barrelFiles?: boolean;
     generateClasses?: boolean;
+    exclude?: (string | RegExp)[];
     enumI18NHtmlFile?: string;
     enumLanguageFiles?: string[];
     modelModuleName?: string;

@@ -79,7 +79,7 @@ export function generateModelTSFiles(swagger: Swagger, options: GeneratorOptions
         MODEL_FILE_SUFFIX
     );
     // group types per namespace
-    let namespaceGroups = getNamespaceGroups(typeCollection);
+    let namespaceGroups = getNamespaceGroups(typeCollection, options);
     // generate model files
     generateTSModels(namespaceGroups, folder, options);
     // generate barrel files (index files to simplify import statements)
@@ -695,19 +695,39 @@ function getImportFile(propTypeName: string, propNamespace: string, pathToRoot: 
     return (pathToRoot + importPath).toLocaleLowerCase();
 }
 
-function getNamespaceGroups(typeCollection: Type[]) {
+function getNamespaceGroups(typeCollection: Type[], options: GeneratorOptions) {
     let namespaces: NamespaceGroups = {
         [ROOT_NAMESPACE]: []
     };
     for (let i = 0; i < typeCollection.length; ++i) {
         let type = typeCollection[i];
         let namespace = type.namespace || ROOT_NAMESPACE;
+        if (excludeNamespace(namespace, options.exclude)) {
+            continue;
+        }
+
         if (!namespaces[namespace]) {
             namespaces[namespace] = [];
         }
         namespaces[namespace].push(type);
     }
     return namespaces;
+}
+
+function excludeNamespace(namespace: string, excludeOptions: (string | RegExp)[]) {
+    if (!excludeOptions || !excludeOptions.length) {
+        return false;
+    }
+
+    for (const excludeCheck of excludeOptions) {
+        if (
+            (excludeCheck instanceof RegExp && excludeCheck.test(namespace)) ||
+            (~namespace.indexOf(<string>excludeCheck))
+        ) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function generateTSModels(namespaceGroups: NamespaceGroups, folder: string, options: GeneratorOptions) {
