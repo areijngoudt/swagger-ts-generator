@@ -14,7 +14,7 @@ Download the module with npm:
 npm install --save-dev swagger-ts-generator
 ```
 
-# Usage in plain NodeJS
+# Usage in NodeJS
 Create a simple `.js` file and run it using `node path/to/file.js`
 
 You can then run this from `npm` by adding the `node` line from above as a task in your `package.json`
