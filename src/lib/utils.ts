@@ -9,7 +9,6 @@ import { GeneratorOptions } from '../bootstrap/options';
 export const ENCODING = 'utf8';
 
 export function readAndCompileTemplateFile(templatePath: string) {
-    console.log('HBS', templatePath);
     let templateSource = readFileSync(templatePath, ENCODING);
     let template = compile(templateSource);
     return template;

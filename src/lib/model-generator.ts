@@ -734,6 +734,7 @@ function excludeNamespace(namespace: string, excludeOptions: (string | RegExp)[]
 function generateTSModels(namespaceGroups: NamespaceGroups, folder: string, options: GeneratorOptions) {
     let data = {
         generateClasses: options.generateClasses,
+        hasComplexType: false,
         validatorFileName: removeExtension(options.validatorsFileName),
         baseModelFileName: removeExtension(options.baseModelFileName),
         moduleName: options.modelModuleName,
@@ -763,6 +764,7 @@ function generateTSModels(namespaceGroups: NamespaceGroups, folder: string, opti
         each(typeCol, type => {
             let outputFileName = join(typeFolder, type.fileName);
             data.type = type;
+            data.hasComplexType = type.properties.some(property => property.isComplexType);
             let result = template(data);
             let isChanged = writeFileIfContentsIsChanged(
                 outputFileName,

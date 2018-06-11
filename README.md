@@ -343,14 +343,15 @@ For custom models you can use the following data in your HBS template
 
 ```typescript
 interface TemplateData {
-      generateClasses: boolean,
-      validatorFileName: string,
-      baseModelFileName: string,
-      moduleName: string,
-      enumModuleName: string,
-      enumRef: string,
-      subTypePropertyName: string,
-      type: Type
+      generateClasses: boolean;
+      hasComplexType: boolean;
+      validatorFileName: string;
+      baseModelFileName: string;
+      moduleName: string;
+      enumModuleName: string;
+      enumRef: string;
+      subTypePropertyName: string;
+      type: Type;
 }
 
 // Where Type is the following interface
