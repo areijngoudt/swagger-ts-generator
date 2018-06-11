@@ -2,8 +2,11 @@ export interface GeneratorOptions {
     modelFolder: string;
     enumTSFile: string;
 
-    barrelFiles?: boolean;
+    generateBarrelFiles?: boolean;
     generateClasses?: boolean;
+    generateValidatorFile?: boolean;
+    baseModelFileName?: string;
+    validatorsFileName?: string;
     exclude?: (string | RegExp)[];
     enumI18NHtmlFile?: string;
     enumLanguageFiles?: string[];

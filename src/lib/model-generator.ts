@@ -2,7 +2,7 @@ import { readdirSync, unlinkSync } from 'fs';
 import { normalize, join } from 'path';
 import { forEach, keys, indexOf, has, some, lowerFirst, kebabCase, upperFirst, endsWith, find, each, uniqBy } from 'lodash';
 
-import { log, readAndCompileTemplateFile, ensureFolder, writeFileIfContentsIsChanged, isInTypesToFilter, getPathToRoot, getSortedObjectProperties, convertNamespaceToPath, hasTypeFromDescription, getTypeFromDescription, getDirectories, removeFolder } from './utils';
+import { log, readAndCompileTemplateFile, ensureFolder, writeFileIfContentsIsChanged, isInTypesToFilter, getPathToRoot, getSortedObjectProperties, convertNamespaceToPath, hasTypeFromDescription, getTypeFromDescription, getDirectories, removeFolder, removeExtension } from './utils';
 import { GeneratorOptions } from '../bootstrap/options';
 import { Swagger, SwaggerDefinition, SwaggerPropertyDefinition, SwaggerDefinitionProperties } from '../bootstrap/swagger';
 
@@ -60,15 +60,15 @@ const TS_SUFFIX = ".ts";
 const MODEL_SUFFIX = ".model";
 const MODEL_FILE_SUFFIX = `${MODEL_SUFFIX}${TS_SUFFIX}`;
 const ROOT_NAMESPACE = "root";
-const VALDIDATORS_FILE_NAME = "validators.ts";
-const BASE_MODEL_FILE_NAME = "base-model.ts";
 // const BASE_TYPE_WAIT_FOR_SECOND_PASS = 'wait-for-second-pass';
 
 export function generateModelTSFiles(swagger: Swagger, options: GeneratorOptions) {
     let folder = normalize(options.modelFolder);
 
     // generate fixed file with non-standard validators for validation rules which can be defined in the swagger file
-    generateTSValidations(folder, options);
+    if(options.generateValidatorFile) {
+        generateTSValidations(folder, options);
+    }
     // generate fixed file with the BaseModel class
     generateTSBaseModel(folder, options);
     // get type definitions from swagger
@@ -83,7 +83,7 @@ export function generateModelTSFiles(swagger: Swagger, options: GeneratorOptions
     // generate model files
     generateTSModels(namespaceGroups, folder, options);
     // generate barrel files (index files to simplify import statements)
-    if (options.barrelFiles) {
+    if (options.generateBarrelFiles) {
         generateBarrelFiles(namespaceGroups, folder, options);
     }
 }
@@ -91,7 +91,7 @@ export function generateModelTSFiles(swagger: Swagger, options: GeneratorOptions
 function generateTSValidations(folder: string, options: GeneratorOptions) {
     if (!options.generateClasses) return;
 
-    let outputFileName = join(folder, VALDIDATORS_FILE_NAME);
+    let outputFileName = join(folder, options.validatorsFileName);
     let data = {};
     let template = readAndCompileTemplateFile(options.templates.validators);
     let result = template(data);
@@ -105,7 +105,7 @@ function generateTSValidations(folder: string, options: GeneratorOptions) {
 function generateTSBaseModel(folder: string, options: GeneratorOptions) {
     if (!options.generateClasses) return;
 
-    let outputFileName = join(folder, BASE_MODEL_FILE_NAME);
+    let outputFileName = join(folder, options.baseModelFileName);
     let data = {};
     let template = readAndCompileTemplateFile(options.templates.baseModel);
     let result = template(data);
@@ -733,6 +733,8 @@ function excludeNamespace(namespace: string, excludeOptions: (string | RegExp)[]
 function generateTSModels(namespaceGroups: NamespaceGroups, folder: string, options: GeneratorOptions) {
     let data = {
         generateClasses: options.generateClasses,
+        validatorFileName: removeExtension(options.validatorsFileName),
+        baseModelFileName: removeExtension(options.baseModelFileName),
         moduleName: options.modelModuleName,
         enumModuleName: options.enumModuleName,
         enumRef: options.enumRef,
@@ -812,7 +814,7 @@ function generateBarrelFiles(namespaceGroups: NamespaceGroups, folder: string, o
 
     for (let key in namespaceGroups) {
         data.fileNames = namespaceGroups[key].map(type => {
-            return removeTsExtention(type.fileName);
+            return removeExtension(type.fileName);
         });
         if (key === ROOT_NAMESPACE) {
             addRootFixedFileNames(data.fileNames, options);
@@ -832,15 +834,11 @@ function generateBarrelFiles(namespaceGroups: NamespaceGroups, folder: string, o
 
 function addRootFixedFileNames(fileNames: string[], options: GeneratorOptions) {
     let enumOutputFileName = normalize(options.enumTSFile.split("/").pop());
-    fileNames.splice(0, 0, removeTsExtention(enumOutputFileName));
+    fileNames.splice(0, 0, removeExtension(enumOutputFileName));
     if (options.generateClasses) {
-        let validatorsOutputFileName = normalize(VALDIDATORS_FILE_NAME);
-        fileNames.splice(0, 0, removeTsExtention(validatorsOutputFileName));
+        let validatorsOutputFileName = normalize(options.validatorsFileName);
+        fileNames.splice(0, 0, removeExtension(validatorsOutputFileName));
     }
-}
-
-function removeTsExtention(fileName: string) {
-    return fileName.replace(".ts", "");
 }
 
 function removeFilesOfNonExistingTypes(

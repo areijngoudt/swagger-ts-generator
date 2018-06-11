@@ -58,8 +58,11 @@ function enrichConfig(options: GeneratorOptions) {
     const templates = options.templates;
     delete options.templates;
     return {
-        barrelFiles: true,
+        generateBarrelFiles: true,
         generateClasses: true,
+        generateValidatorFile: true,
+        baseModelFileName: 'base-model.ts',
+        validatorsFileName: 'validators.ts',
         templates: {
             validators: `${TEMPLATE_FOLDER}/generate-validators-ts.hbs`,
             baseModel: `${TEMPLATE_FOLDER}/generate-base-model-ts.hbs`,

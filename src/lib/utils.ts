@@ -122,6 +122,10 @@ export function isInTypesToFilter(item: SwaggerDefinition, key: string, options:
     return false;
 }
 
+export function removeExtension(file: string) {
+    return file.replace('.ts', '');
+}
+
 export function log(message: string) {
     let time = moment().format('HH:mm:SS');
     console.log(`[${time}] ${message}`);
