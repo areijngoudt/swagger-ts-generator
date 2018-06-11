@@ -524,7 +524,7 @@ function getFileName(type: string, options: GeneratorOptions, fileSuffix: string
     return `${kebabCase(typeName)}${fileSuffix}`;
 }
 
-function getTypeName(type, options) {
+function getTypeName(type: string, options: GeneratorOptions) {
     let typeName;
     if (getIsGenericType(type)) {
         let startGenericT = type.indexOf("[");
@@ -601,6 +601,7 @@ function getBaseType(superTypeName: string, typeCollection: Type[], item: Swagge
     let typeName = getTypeName(type, options);
     //let namespace = getNamespace(type, options);
     let baseType = findTypeInTypeCollection(typeCollection, typeName);
+    console.log('BASETYPE', baseType);
     // console.log('---------------------')
     // console.log('getBaseType superTypeName', superTypeName, 'type', type, /*'item', item,*/ 'typeName', typeName, 'baseType', baseType ? baseType.typeName : null, /*'typeCollection', typeCollection*/ )
     return baseType;
