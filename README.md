@@ -27,7 +27,7 @@ const config = {
 }
 
 generateTSFiles(
-    config.file,
+    config.file, // This can be either a file containing the Swagger json or the Swagger object itself
     {
         modelFolder: './path/to/models',
         enumTSFile: './path/to/models/enums.ts',
