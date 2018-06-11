@@ -13,7 +13,7 @@ export interface GeneratorOptions {
     modelModuleName?: string;
     enumModuleName?: string;
     enumRef?: string;
-    subTypePropertyName?: string[];
+    subTypePropertyName?: string;
     namespacePrefixesToRemove?: string[];
     typeNameSuffixesToRemove?: string[];
     typesToFilter?: string[];

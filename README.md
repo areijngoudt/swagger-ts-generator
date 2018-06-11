@@ -14,6 +14,28 @@ Download the module with npm:
 npm install --save-dev swagger-ts-generator
 ```
 
+# Usage in plain NodeJS
+Create a simple `.js` file and run it using `node path/to/file.js`
+
+You can then run this from `npm` by adding the `node` line from above as a task in your `package.json`
+
+```typescript
+const { generateTSFiles } = require('swagger-ts-generator');
+
+const config = {
+    file: __dirname + '\\swagger.json'
+}
+
+generateTSFiles(
+    config.file,
+    {
+        modelFolder: './path/to/models',
+        enumTSFile: './path/to/models/enums.ts',
+        // + optionally more configuration
+    }
+);
+```
+
 # Usage in Gulp
 
 ## `gulp.config`
@@ -314,6 +336,70 @@ export class Pet extends BaseModel implements IPet {
     return this._formGroup;
   }
 }
+```
+
+## Custom models
+For custom models you can use the following data in your HBS template
+
+```typescript
+interface TemplateData {
+      generateClasses: boolean,
+      validatorFileName: string,
+      baseModelFileName: string,
+      moduleName: string,
+      enumModuleName: string,
+      enumRef: string,
+      subTypePropertyName: string,
+      type: Type
+}
+
+// Where Type is the following interface
+interface Type {
+    fileName: string;
+    typeName: string;
+    namespace: string;
+    fullNamespace: string;
+    fullTypeName: string;
+    isSubType: boolean;
+    baseType: Type;
+    baseImportFile: string;
+    path: string;
+    pathToRoot: string;
+    properties: TypeProperty[];
+}
+
+interface TypeProperty {
+    name: string;
+    typeName: string;
+    namespace: string;
+    description: string;
+    hasValidation: boolean;
+    isComplexType: boolean;
+    isImportType: boolean;
+    isUniqueImportType: boolean;
+    importType: string;
+    importFile: string;
+    isEnum: boolean;
+    isUniqueImportEnumType: boolean;
+    importEnumType: string;
+    isArray: boolean;
+    isArrayComplexType: boolean;
+    arrayTypeName: string;
+    validators: {
+        validation: {
+            required: boolean;
+            minimum: number;
+            maximum: number;
+            enum: string;
+            minLength: number;
+            maxLength: number;
+            pattern: string;
+        };
+        validatorArray: string[];
+    };
+    enum: string[];
+}
+
 ```
 
 ## `enums.ts`
