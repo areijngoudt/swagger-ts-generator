@@ -477,7 +477,7 @@ function getPropertyType(item: SwaggerPropertyDefinition, name: string, options:
         }
         if (item.type == "array" && item.items) {
             let arrayPropType = getPropertyType(item.items, name, options, isEnum);
-            result.typeName = `${arrayPropType.typeName}[]`;
+            result.typeName = `Array<${arrayPropType.typeName}>`;
             result.namespace = arrayPropType.namespace;
             result.isArrayComplexType = !isEnum ? !!item.items.$ref : false;
             result.arrayTypeName = arrayPropType.typeName;
@@ -490,7 +490,7 @@ function getPropertyType(item: SwaggerPropertyDefinition, name: string, options:
             // fix enum array with overrule type
             if (item.type == "array" && item.items) {
                 result.arrayTypeName = result.typeName;
-                result.typeName = `${result.typeName}[]`;
+                result.typeName = `Array<${result.typeName}>`;
             }
         }
 
@@ -606,7 +606,7 @@ function getBaseType(superTypeName: string, typeCollection: Type[], item: Swagge
     return baseType;
 }
 
-function findTypeInTypeCollection(typeCollection, typeName: string) {
+function findTypeInTypeCollection(typeCollection: Type[], typeName: string) {
     let result = find(typeCollection, type => {
         return type.typeName === typeName;
         //return type.typeName === typeName && type.namespace === namespace;
@@ -678,7 +678,7 @@ function getImportType(type: string, isArray: boolean) {
 
 function removeGenericArray(type: string, isArray: boolean) {
     if (isArray) {
-        let result = type.replace("[", "").replace("]", "");
+        let result = type.replace("Array<", "").replace(">", "");
         return result;
     }
     return type;
