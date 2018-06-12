@@ -1,70 +1,75 @@
-"use strict";
+import { readFileSync } from 'fs';
+import { normalize } from 'path';
+import { each, clone, keys, map, unset, forEach, has, sortBy, isObject, lowerFirst, uniqBy, upperCase, startCase } from 'lodash';
 
-let fs = require("fs");
-let path = require("path");
-let _ = require("lodash");
+import { Swagger, SwaggerDefinitions, SwaggerDefinition } from '../bootstrap/swagger';
+import { GeneratorOptions } from '../bootstrap/options';
+import { ENCODING, readAndCompileTemplateFile, writeFileIfContentsIsChanged, log, ensureFile, isInTypesToFilter, hasTypeFromDescription, getTypeFromDescription } from './utils';
 
-let utils = require("./utils");
+interface EnumType {
+    type: string;
+    valuesAndLabels: EnumTypeValueAndLabel[];
+    joinedValues: string;
+}
 
-module.exports = {
-    generateEnumTSFile: generateEnumTSFile,
-    generateEnumI18NHtmlFile: generateEnumI18NHtmlFile,
-    generateEnumLanguageFiles: generateEnumLanguageFiles
-};
+interface EnumTypeValueAndLabel {
+    value: string;
+    label: string;
+}
 
-function generateEnumTSFile(swagger, options) {
-    let outputFileName = path.normalize(options.enumTSFile);
+export function generateEnumTSFile(swagger: Swagger, options: GeneratorOptions) {
+    let outputFileName = normalize(options.enumTSFile);
     // get enum definitions from swagger
     let enumTypeCollection = getEnumDefinitions(swagger, options);
     generateTSEnums(enumTypeCollection, outputFileName, options);
 
-    function generateTSEnums(enumTypeCollection, outputFileName, options) {
+    function generateTSEnums(enumTypeCollection: EnumType[], outputFileName: string, options: GeneratorOptions) {
         let data = {
             moduleName: options.enumModuleName,
             generateClasses: options.generateClasses,
             enumTypeCollection: enumTypeCollection
         };
-        let template = utils.readAndCompileTemplateFile("generate-enum-ts.hbs");
+        let template = readAndCompileTemplateFile(options.templates.enum);
         let result = template(data);
-        let isChanged = utils.writeFileIfContentsIsChanged(outputFileName, result);
+        let isChanged = writeFileIfContentsIsChanged(outputFileName, result);
         if (isChanged) {
-            utils.log(
+            log(
                 `generated ${enumTypeCollection.length}  enums in ${outputFileName}`
             );
         }
     }
 }
 
-function generateEnumI18NHtmlFile(swagger, options) {
-    let outputFileName = path.normalize(options.enumI18NHtmlFile);
+export function generateEnumI18NHtmlFile(swagger: Swagger, options: GeneratorOptions) {
+    let outputFileName = normalize(options.enumI18NHtmlFile);
     // get enum definitions from swagger
     let enumTypeCollection = getEnumDefinitions(swagger, options);
     generateI18NEnumsHtml(enumTypeCollection, outputFileName, options);
 
-    function generateI18NEnumsHtml(enumTypeCollection, outputFileName, options) {
+    function generateI18NEnumsHtml(enumTypeCollection: EnumType[], outputFileName: string, options: GeneratorOptions) {
         let data = {
-            enumTypeCollection: enumTypeCollection
+            enumTypeCollection
         };
-        let template = utils.readAndCompileTemplateFile(
-            "generate-enum-i18n-html.hbs"
+        let template = readAndCompileTemplateFile(
+            options.templates.enumLanguage
         );
         let result = template(data);
-        let isChanged = utils.writeFileIfContentsIsChanged(outputFileName, result);
+        let isChanged = writeFileIfContentsIsChanged(outputFileName, result);
         if (isChanged) {
-            utils.log(
+            log(
                 `generated ${enumTypeCollection.length}  enums in ${outputFileName}`
             );
         }
     }
 }
 
-function generateEnumLanguageFiles(swagger, options) {
-    _.each(options.enumLanguageFiles, outputFileName => {
-        outputFileName = path.normalize(outputFileName);
+export function generateEnumLanguageFiles(swagger: Swagger, options: GeneratorOptions) {
+    each(options.enumLanguageFiles, outputFileName => {
+        outputFileName = normalize(outputFileName);
         // read contents of the current language file
-        utils.ensureFile(outputFileName, "{}");
+        ensureFile(outputFileName, "{}");
         let enumLanguage = JSON.parse(
-            fs.readFileSync(outputFileName, utils.ENCODING)
+            readFileSync(outputFileName, ENCODING)
         );
         // get enum definitions from swagger
         let enumTypeCollection = getEnumDefinitions(swagger, options);
@@ -74,18 +79,18 @@ function generateEnumLanguageFiles(swagger, options) {
         generateEnumLanguageFile(enumLanguage, outputFileName, newValuesAdded);
     });
 
-    function buildNewEnumLanguage(enumTypeCollection, enumLanguage) {
+    function buildNewEnumLanguage(enumTypeCollection: EnumType[], enumLanguage) {
         let result = false;
-        let currentEnumLanguage = _.clone(enumLanguage);
-        let properties = _.keys(enumLanguage);
-        _.map(properties, property => {
-            _.unset(enumLanguage, property);
+        let currentEnumLanguage = clone(enumLanguage);
+        let properties = keys(enumLanguage);
+        map(properties, property => {
+            unset(enumLanguage, property);
         });
-        _.forEach(enumTypeCollection, function (enumType) {
+        forEach(enumTypeCollection, function (enumType) {
             enumLanguage[enumType.type] = "-------ENUM-TYPE-------";
-            _.forEach(enumType.valuesAndLabels, function (valueAndLabel, key) {
-                if (!_.has(enumLanguage, valueAndLabel.value)) {
-                    if (_.has(currentEnumLanguage, valueAndLabel.value)) {
+            forEach(enumType.valuesAndLabels, function (valueAndLabel, key) {
+                if (!has(enumLanguage, valueAndLabel.value)) {
+                    if (has(currentEnumLanguage, valueAndLabel.value)) {
                         enumLanguage[valueAndLabel.value] =
                             currentEnumLanguage[valueAndLabel.value];
                     } else {
@@ -100,14 +105,14 @@ function generateEnumLanguageFiles(swagger, options) {
 
     function generateEnumLanguageFile(
         enumLanguage,
-        outputFileName,
-        newValuesAdded
+        outputFileName: string,
+        newValuesAdded: boolean
     ) {
         let message = newValuesAdded ?
             "generated new enum values in" :
             "nothing new";
-        utils.log(`${message} in ${outputFileName}`);
-        let isChanged = utils.writeFileIfContentsIsChanged(
+        log(`${message} in ${outputFileName}`);
+        let isChanged = writeFileIfContentsIsChanged(
             outputFileName,
             JSON.stringify(enumLanguage, null, 2)
         );
@@ -115,40 +120,41 @@ function generateEnumLanguageFiles(swagger, options) {
     }
 }
 
-function getEnumDefinitions(swagger, options) {
-    let enumTypeCollection = new Array();
+function getEnumDefinitions(swagger: Swagger, options: GeneratorOptions) {
+    let enumTypeCollection: EnumType[] = new Array();
     filterEnumDefinitions(enumTypeCollection, swagger.definitions, options);
     // filter on unique types
-    enumTypeCollection = _.uniq(enumTypeCollection, "type");
+    enumTypeCollection = uniqBy(enumTypeCollection, "type");
     // patch enumTypes which have the same values (to prevent non-unique consts in Go)
     enumTypeCollection = removeEnumTypesWithSameValues(enumTypeCollection);
     // sort on type
     if (options.sortEnumTypes) {
-        enumTypeCollection = _.sortBy(enumTypeCollection, "type");
+        enumTypeCollection = sortBy(enumTypeCollection, "type");
     }
     // console.log('enumTypeCollection', enumTypeCollection);
     return enumTypeCollection;
 }
 
 function filterEnumDefinitions(
-    enumTypeCollection,
-    node,
-    options,
-    enumArrayType
+    enumTypeCollection: EnumType[],
+    node: SwaggerDefinitions | SwaggerDefinition,
+    options: GeneratorOptions,
+    enumArrayType?: string
 ) {
-    _.forEach(node, function (item, key) {
-        if (_.isObject(item) && !utils.isInTypesToFilter(item, key, options)) {
+    forEach(node, function (item, key) {
+        if (isObject(item) && !isInTypesToFilter(item, key, options)) {
             if (item.enum) {
                 let type = enumArrayType ? enumArrayType : key;
                 let values = item.enum;
-                let enumType = {
-                    type: type,
-                    valuesAndLabels: getEnumValuesAndLabels(values)
+                let enumType: EnumType = {
+                    type,
+                    valuesAndLabels: getEnumValuesAndLabels(values),
+                    joinedValues: undefined
                 };
                 // description may contain an overrule type, eg /** type coverType */
-                if (utils.hasTypeFromDescription(item.description)) {
-                    enumType.type = _.lowerFirst(
-                        utils.getTypeFromDescription(item.description)
+                if (hasTypeFromDescription(item.description)) {
+                    enumType.type = lowerFirst(
+                        getTypeFromDescription(item.description)
                     );
                 }
                 // add string with joined values so enums with the same values can be detected
@@ -161,9 +167,9 @@ function filterEnumDefinitions(
                 let enumArrayType = undefined;
                 if (item.type === "array") {
                     enumArrayType = key;
-                    if (utils.hasTypeFromDescription(item.description)) {
-                        enumArrayType = _.lowerFirst(
-                            utils.getTypeFromDescription(item.description)
+                    if (hasTypeFromDescription(item.description)) {
+                        enumArrayType = lowerFirst(
+                            getTypeFromDescription(item.description)
                         );
                     }
                 }
@@ -173,8 +179,8 @@ function filterEnumDefinitions(
     });
 }
 
-function removeEnumTypesWithSameValues(enumTypeCollection) {
-    const result = _.uniqBy(enumTypeCollection, element => {
+function removeEnumTypesWithSameValues(enumTypeCollection: EnumType[]) {
+    const result = uniqBy(enumTypeCollection, element => {
         return element.type + element.joinedValues;
     });
     // console.log('#enumTypes with and without duplicates', enumTypeCollection.length, result.length);
@@ -195,16 +201,16 @@ function removeEnumTypesWithSameValues(enumTypeCollection) {
     // return enumTypeCollection;
 }
 
-function getEnumValuesAndLabels(enumValues) {
-    let result = new Array();
-    _.forEach(enumValues, (value, key) => {
+function getEnumValuesAndLabels(enumValues: string[]) {
+    let result: EnumTypeValueAndLabel[] = new Array();
+    forEach(enumValues, value => {
         const valueAndLabel = {
-            value: value,
+            value,
             // only convert label when the value contains not only uppercase chars and length > 3
             // (only uppercase with short length are considered codes like Country or Currency)
-            label: _.upperCase(value) === value && value.length <= 3 ?
+            label: upperCase(value) === value && value.length <= 3 ?
                 value :
-                _.startCase(value.toLowerCase())
+                startCase(value.toLowerCase())
         };
         result.push(valueAndLabel);
     });
