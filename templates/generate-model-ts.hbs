@@ -5,8 +5,8 @@
 /* tslint:disable */
 {{#if generateClasses}}
 import { Validators, FormControl, FormGroup, FormArray, ValidatorFn } from '@angular/forms';
-import { minValueValidator, maxValueValidator, enumValidator } from '{{type.pathToRoot}}validators';
-import { BaseModel } from '{{type.pathToRoot}}base-model';
+import { minValueValidator, maxValueValidator, enumValidator } from '{{type.pathToRoot}}{{validatorFileName}}';
+import { BaseModel } from '{{type.pathToRoot}}{{baseModelFileName}}';
 {{/if}}
 
 {{#with type}}
