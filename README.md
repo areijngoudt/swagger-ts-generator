@@ -17,8 +17,7 @@ npm install --save-dev swagger-ts-generator
 # Usage in NodeJS
 Create a simple `.js` file and run it using `node path/to/file.js`
 
-You can then run this from `npm` by adding the `node` line from above as a task in your `package.json`
-
+Example:
 ```typescript
 const { generateTSFiles } = require('swagger-ts-generator');
 
@@ -35,6 +34,8 @@ generateTSFiles(
     }
 );
 ```
+
+You can then run the `.js` file from `npm` by adding the `node` line from above as a task in your `package.json`
 
 # Usage in Gulp
 
