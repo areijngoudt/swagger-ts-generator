@@ -112,11 +112,27 @@ export function getSortedObjectProperties(object: Object) {
 
 export function isInTypesToFilter(item: SwaggerDefinition, key: string, options: GeneratorOptions) {
     if (options && options.typesToFilter) {
-        const result = !!find(options.typesToFilter, element => { return element === key; });
+        const result = checkExclution(key, options.typesToFilter); // !!find(options.typesToFilter, element => { return element === key; });
         // if (result) {
         //     console.log('item in typesToFilter', key, result);
         // }
         return result;
+    }
+    return false;
+}
+
+export function checkExclution(stringToCheck: string, excludeOptions: (string | RegExp)[]) {
+    if (!excludeOptions || !excludeOptions.length || typeof stringToCheck !== 'string') {
+        return false;
+    }
+
+    for (const excludeCheck of excludeOptions) {
+        if (
+            (excludeCheck instanceof RegExp && excludeCheck.test(stringToCheck)) ||
+            (~stringToCheck.indexOf(<string>excludeCheck))
+        ) {
+            return true;
+        }
     }
     return false;
 }

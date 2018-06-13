@@ -2,7 +2,7 @@ import { readdirSync, unlinkSync } from 'fs';
 import { normalize, join } from 'path';
 import { forEach, keys, indexOf, has, some, lowerFirst, kebabCase, upperFirst, endsWith, find, each, uniqBy } from 'lodash';
 
-import { log, readAndCompileTemplateFile, ensureFolder, writeFileIfContentsIsChanged, isInTypesToFilter, getPathToRoot, getSortedObjectProperties, convertNamespaceToPath, hasTypeFromDescription, getTypeFromDescription, getDirectories, removeFolder, removeExtension } from './utils';
+import { log, readAndCompileTemplateFile, ensureFolder, writeFileIfContentsIsChanged, isInTypesToFilter, getPathToRoot, getSortedObjectProperties, convertNamespaceToPath, hasTypeFromDescription, getTypeFromDescription, getDirectories, removeFolder, removeExtension, checkExclution } from './utils';
 import { GeneratorOptions } from '../bootstrap/options';
 import { Swagger, SwaggerDefinition, SwaggerPropertyDefinition, SwaggerDefinitionProperties } from '../bootstrap/swagger';
 
@@ -702,7 +702,7 @@ function getNamespaceGroups(typeCollection: Type[], options: GeneratorOptions) {
     for (let i = 0; i < typeCollection.length; ++i) {
         let type = typeCollection[i];
         let namespace = type.namespace || ROOT_NAMESPACE;
-        if (excludeNamespace(namespace, options.exclude)) {
+        if (checkExclution(namespace, options.exclude)) {
             continue;
         }
 
@@ -712,22 +712,6 @@ function getNamespaceGroups(typeCollection: Type[], options: GeneratorOptions) {
         namespaces[namespace].push(type);
     }
     return namespaces;
-}
-
-function excludeNamespace(namespace: string, excludeOptions: (string | RegExp)[]) {
-    if (!excludeOptions || !excludeOptions.length) {
-        return false;
-    }
-
-    for (const excludeCheck of excludeOptions) {
-        if (
-            (excludeCheck instanceof RegExp && excludeCheck.test(namespace)) ||
-            (~namespace.indexOf(<string>excludeCheck))
-        ) {
-            return true;
-        }
-    }
-    return false;
 }
 
 function generateTSModels(namespaceGroups: NamespaceGroups, folder: string, options: GeneratorOptions) {
