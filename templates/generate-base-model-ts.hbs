@@ -57,12 +57,17 @@ export abstract class BaseModel {
         control.setValidators(vals);
     }
 
-    protected fillModelArray<T>(object: BaseModel, key: string, values: Array<T>, type = undefined): void {
+    protected fillModelArray<T>(object: BaseModel, key: string, values: Array<T>, subTypeFactoryFn: Function, type = undefined): void {
         if (values) {
             object[key] = new Array<T>();
             for(let value of values) {
                 if (type) {
-                    object[key].push(new type(value));
+                    if (this.isSubType(value)) {
+                        const subTypeInstance = subTypeFactoryFn(value);
+                        object[key].push(subTypeInstance);
+                    } else {
+                        object[key].push(new type(value));
+                    }
                 } else {
                     object[key].push(value);
                 }
@@ -70,6 +75,9 @@ export abstract class BaseModel {
             // generate FormArray control elements
             this.fillFormArray<T>(key, object[key], type);
         }
+    }
+    protected isSubType(value: any): boolean {
+        return value.hasOwnProperty('{{subTypePropertyName}}');
     }
     protected fillFormArray<T>(key: string, modelValues: any, type = undefined): void {
         if (this._formGroup) {

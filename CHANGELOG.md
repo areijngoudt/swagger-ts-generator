@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.1.37
+
+Better support for subTypes.. The file sub-type-factory.ts is now generated.
+
 ### 1.1.36
 
 `swaggerInput` now can contain a filepath or the parsed contents of the swagger file.
