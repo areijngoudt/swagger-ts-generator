@@ -37,6 +37,7 @@ export interface {{{typeName}}} {
 {{#if ../generateClasses}}
 
 export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{else}}BaseModel{{/if}} implements I{{{typeName}}}  {
+    static {{{../subTypePropertyConstantName}}} = '{{{fullTypeName}}}';
 {{#properties}}
     {{#if description}}
     /** {{{description}}} */
@@ -52,7 +53,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
         super();
 {{#if isSubType}}
 
-        this.{{{../subTypePropertyName}}} = '{{{fullTypeName}}}';
+        this.{{{../subTypePropertyName}}} = {{{typeName}}}.{{{../subTypePropertyConstantName}}};
 {{/if}}
 {{#properties}}
     {{#if isComplexType}}

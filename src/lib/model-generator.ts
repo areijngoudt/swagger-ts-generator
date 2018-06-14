@@ -8,6 +8,7 @@ import {
   some,
   lowerFirst,
   kebabCase,
+  snakeCase,
   upperFirst,
   endsWith,
   find,
@@ -148,7 +149,7 @@ function generateTSBaseModel(folder: string, options: GeneratorOptions) {
 
   let outputFileName = join(folder, options.baseModelFileName);
   let data = {
-    subTypePropertyName: options.subTypePropertyName || "$type"
+    subTypePropertyName: options.subTypePropertyName
   };
   let template = readAndCompileTemplateFile(options.templates.baseModel);
   let result = template(data);
@@ -861,9 +862,13 @@ function generateTSModels(
     moduleName: options.modelModuleName,
     enumModuleName: options.enumModuleName,
     enumRef: options.enumRef,
-    subTypePropertyName: options.subTypePropertyName || "$type",
+    subTypePropertyName: options.subTypePropertyName,
+    subTypePropertyConstantName: snakeCase(
+      options.subTypePropertyName
+    ).toUpperCase(),
     type: undefined
   };
+  console.log(data);
   let template = readAndCompileTemplateFile(options.templates.models);
   ensureFolder(folder);
   for (let namespace in namespaceGroups) {
@@ -941,7 +946,7 @@ function generateSubTypeFactory(
 ) {
   let data = {
     subTypes: undefined,
-    subTypePropertyName: options.subTypePropertyName || "$type"
+    subTypePropertyName: options.subTypePropertyName
   };
   let template = readAndCompileTemplateFile(options.templates.subTypeFactory);
   for (let key in namespaceGroups) {

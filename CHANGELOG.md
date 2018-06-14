@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.1.38
+
+in model subtypes: static classname as a string
+
 ### 1.1.37
 
 Better support for subTypes.. The file sub-type-factory.ts is now generated.

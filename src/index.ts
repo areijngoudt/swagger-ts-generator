@@ -72,6 +72,7 @@ function enrichConfig(options: GeneratorOptions) {
     baseModelFileName: "base-model.ts",
     validatorsFileName: "validators.ts",
     subTypeFactoryFileName: "sub-type-factory.ts",
+    subTypePropertyName: options.subTypePropertyName || "$type",
     templates: {
       validators: `${TEMPLATE_FOLDER}/generate-validators-ts.hbs`,
       baseModel: `${TEMPLATE_FOLDER}/generate-base-model-ts.hbs`,
