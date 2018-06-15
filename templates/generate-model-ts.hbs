@@ -7,6 +7,8 @@
 import { Validators, FormControl, FormGroup, FormArray, ValidatorFn } from '@angular/forms';
 import { minValueValidator, maxValueValidator, enumValidator } from '{{type.pathToRoot}}{{validatorFileName}}';
 import { BaseModel } from '{{type.pathToRoot}}{{baseModelFileName}}';
+import { SubTypeFactory } from '{{type.pathToRoot}}{{subTypeFactoryFileName}}';
+
 {{/if}}
 
 {{#with type}}
@@ -35,6 +37,7 @@ export interface {{{typeName}}} {
 {{#if ../generateClasses}}
 
 export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{else}}BaseModel{{/if}} implements I{{{typeName}}}  {
+    static {{{../subTypePropertyConstantName}}} = '{{{fullTypeName}}}';
 {{#properties}}
     {{#if description}}
     /** {{{description}}} */
@@ -50,7 +53,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
         super();
 {{#if isSubType}}
 
-        this.{{{../subTypePropertyName}}} = '{{{fullTypeName}}}';
+        this.{{{../subTypePropertyName}}} = {{{typeName}}}.{{{../subTypePropertyConstantName}}};
 {{/if}}
 {{#properties}}
     {{#if isComplexType}}
@@ -70,9 +73,14 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
         if (values) {
 {{#properties}}
     {{#if isArray}}
-            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', values.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', values.{{name}}, SubTypeFactory.createSubTypeInstance{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
     {{else}}
         {{#if isComplexType}}
+            {{#if type.isBaseType}}
+            if (this.{{name}}.{{{../../subTypePropertyName}}} !== values.{{name}}.{{{../../subTypePropertyName}}}) {
+                this.{{name}} = SubTypeFactory.createSubTypeInstance(values.{{name}}) as {{typeName}};
+            }
+            {{/if}}
             this.{{name}}.setValues(values.{{name}});
         {{else}}
             this.{{name}} = values.{{name}};
@@ -114,7 +122,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
         if (this._formGroup) {
 {{#properties}}
 {{#if isArray}}
-            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', this.{{name}}, SubTypeFactory.createSubTypeInstance{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
 {{else if isImportType}}
             this.{{name}}.setFormGroupValues();
 {{else}}

@@ -1,5 +1,18 @@
 # CHANGELOG
 
+### 1.1.38
+
+in model subtypes: static classname as a string
+
+### 1.1.37
+
+Better support for subTypes.. The file sub-type-factory.ts is now generated.
+
+### 1.1.36
+
+`swaggerInput` now can contain a filepath or the parsed contents of the swagger file.
+generator code now is converted to Typescript
+
 ### 1.1.34
 
 `subTypes` now extend there `baseType` instead of `BaseModel`
