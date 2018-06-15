@@ -304,7 +304,7 @@ function fillMissingBaseTypes(
   // console.log('-------------------> In fillMissingBaseTypes <---------------------------')
   forEach(swagger.definitions, (item, key) => {
     let isSubType = getIsSubType(item);
-    let type = findTypeInTypeCollection(typeCollection, key);
+    let type = findTypeInTypeCollection(typeCollection, getTypeName(key, options));
     if (isSubType && !type.baseType) {
       let namespace = getNamespace(key, options, true);
       let pathToRoot = getPathToRoot(namespace);
@@ -351,7 +351,7 @@ function fillPropertyTypes(
     forEach(type.properties, (property, propertyKey) => {
       const propertyType = findTypeInTypeCollection(
         typeCollection,
-        property.typeName //getTypeName(key, options)
+        property.typeName
       );
       property.type = propertyType;
     });
