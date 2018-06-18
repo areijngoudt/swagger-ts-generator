@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.1.39
+
+static classname as a string now only in subtypes
+
 ### 1.1.38
 
 in model subtypes: static classname as a string

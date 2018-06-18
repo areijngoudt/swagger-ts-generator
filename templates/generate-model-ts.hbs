@@ -37,7 +37,9 @@ export interface {{{typeName}}} {
 {{#if ../generateClasses}}
 
 export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{else}}BaseModel{{/if}} implements I{{{typeName}}}  {
+{{#if isSubType}}    
     static {{{../subTypePropertyConstantName}}} = '{{{fullTypeName}}}';
+{{/if}}
 {{#properties}}
     {{#if description}}
     /** {{{description}}} */
