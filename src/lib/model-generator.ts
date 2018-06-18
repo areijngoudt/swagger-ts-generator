@@ -868,7 +868,6 @@ function generateTSModels(
     ).toUpperCase(),
     type: undefined
   };
-  console.log(data);
   let template = readAndCompileTemplateFile(options.templates.models);
   ensureFolder(folder);
   for (let namespace in namespaceGroups) {
