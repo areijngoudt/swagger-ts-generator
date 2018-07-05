@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.1.40
+
+addFormControl and setFormGroupValuesInAddedFormControls added to BaseModel
+
 ### 1.1.39
 
 static classname as a string now only in subtypes
@@ -10,7 +14,7 @@ in model subtypes: static classname as a string
 
 ### 1.1.37
 
-Better support for subTypes.. The file sub-type-factory.ts is now generated.
+Better support for subTypes. The file sub-type-factory.ts is now generated.
 
 ### 1.1.36
 

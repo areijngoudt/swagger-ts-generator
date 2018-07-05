@@ -49,9 +49,10 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
 
     /**
      * constructor
-     * @param values Can be used to set a webapi response to this newly constructed model
+     * @param values Can be used to set a webapi response or formValues to this newly constructed model
+     * @useFormGroupValuesToModel if true use formValues
     */
-    constructor(values?: any) {
+    constructor(values?: any, useFormGroupValuesToModel = false) {
         super();
 {{#if isSubType}}
 
@@ -59,11 +60,12 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
 {{/if}}
 {{#properties}}
     {{#if isComplexType}}
-        this.{{name}} = new {{{typeName}}}();
+        this.{{name}} = new {{{typeName}}}(); {{#if type.isBaseType}}// baseTypes should not be instantiated{{/if}}
     {{/if}}
 {{/properties}}
+
         if (values) {
-            this.setValues(values);
+            this.setValues(values, useFormGroupValuesToModel);
         }
     }
 
@@ -71,26 +73,63 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
      * set the values.
      * @param values Can be used to set a webapi response to this newly constructed model
     */
-    setValues(values: any): void {
+    setValues(values: any, useFormGroupValuesToModel = false): void {
         if (values) {
+            const rawValues = this.getValuesToUse(values, useFormGroupValuesToModel);
 {{#properties}}
     {{#if isArray}}
-            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', values.{{name}}, SubTypeFactory.createSubTypeInstance{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', rawValues.{{name}}, useFormGroupValuesToModel, SubTypeFactory.createSubTypeInstance{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
     {{else}}
         {{#if isComplexType}}
             {{#if type.isBaseType}}
-            if (this.{{name}}.{{{../../subTypePropertyName}}} !== values.{{name}}.{{{../../subTypePropertyName}}}) {
-                this.{{name}} = SubTypeFactory.createSubTypeInstance(values.{{name}}) as {{typeName}};
+            if (rawValues.{{name}}.{{{../../subTypePropertyName}}} &&
+                this.{{name}}.{{{../../subTypePropertyName}}} !== rawValues.{{name}}.{{{../../subTypePropertyName}}}) {
+                this.{{name}} = SubTypeFactory.createSubTypeInstance(rawValues.{{name}}) as {{typeName}};
             }
             {{/if}}
-            this.{{name}}.setValues(values.{{name}});
+            this.{{name}}.setValues(rawValues.{{name}}, useFormGroupValuesToModel);
         {{else}}
-            this.{{name}} = values.{{name}};
+            this.{{name}} = rawValues.{{name}};
         {{/if}}
     {{/if}}
 {{/properties}}
+            // set values in model properties for added formControls
+            super.setValuesInAddedPropertiesOfAttachedFormControls(values, useFormGroupValuesToModel);
         }
     }
+
+    {{!-- /**
+     * set the values to the ones from the given formGroup.
+     * @param formGroup Can be used to set from values back to the model
+    */
+    useFormGroupValuesToModel(formGroup: FormGroup) {
+        if (formGroup) {
+            const rawValues = formGroup.getRawValue();
+{{#properties}}
+    {{#if isArray}}
+            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', rawValues.{{name}}, SubTypeFactory.createSubTypeInstance{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+    {{else}}
+        {{#if isComplexType}}
+            {{#if type.isBaseType}}
+            if (rawValues.{{name}}.{{{../../subTypePropertyName}}} &&
+                this.{{name}}.{{{../../subTypePropertyName}}} !== rawValues.{{name}}.{{{../../subTypePropertyName}}}) {
+                this.{{name}} = SubTypeFactory.createSubTypeInstance(rawValues.{{name}}) as {{typeName}};
+            }
+            {{/if}}
+            if (rawValues.{{name}}.$formGroup) {
+                this.{{name}}.useFormGroupValuesToModel(rawValues.{{name}}.$formGroup);
+            } else {
+                this.{{name}}.setValues(rawValues.{{name}});
+            }
+        {{else}}
+            this.{{name}} = rawValues.{{name}};
+        {{/if}}
+    {{/if}}
+{{/properties}}
+            // set values in model properties for added formControls
+            super.formGroupValuesToModelOfAttachedFormControls(formGroup);
+        }
+    } --}}
 
     protected getFormGroup(): FormGroup {
         if (!this._formGroup) {
@@ -121,17 +160,18 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
      * set the FormGroup values to the model values.
     */
     setFormGroupValues() {
-        if (this._formGroup) {
 {{#properties}}
 {{#if isArray}}
-            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', this.{{name}}, SubTypeFactory.createSubTypeInstance{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+        // this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', this.{{name}}, SubTypeFactory.createSubTypeInstance{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+        this.fillFormArray<{{arrayTypeName}}>('{{name}}', this.{{name}});
 {{else if isImportType}}
-            this.{{name}}.setFormGroupValues();
+        this.{{name}}.setFormGroupValues();
 {{else}}
-            this._formGroup.controls['{{name}}'].setValue(this.{{name}});
+        this.$formGroup.controls['{{name}}'].setValue(this.{{name}});
 {{/if}}
 {{/properties}}
-        }
+        // set formValues in added formControls
+        super.setFormGroupValuesInAddedFormControls();
     }
 }
 
