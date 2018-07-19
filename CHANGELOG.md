@@ -2,7 +2,9 @@
 
 ### 1.1.40
 
-addFormControl and setFormGroupValuesInAddedFormControls added to BaseModel
+- addFormControl and setFormGroupValuesInAddedFormControls added to BaseModel.
+- better support for subTypes in generated models and baseModel
+- SubTypeFactory is now generated
 
 ### 1.1.39
 

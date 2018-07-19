@@ -98,7 +98,7 @@ export abstract class BaseModel {
                     if (control instanceof FormControl) {
                         this[key] = rawValues[key];
                     } else if (control instanceof FormGroup) {
-                        this[key].setValues(rawValues[key].$formGroup, useFormGroupValuesToModel);
+                        this[key].setValues(rawValues[key], useFormGroupValuesToModel);
                     } else if (control instanceof FormArray) {
                         throw new Error(`control of type FormArray not supported here`);
                     } else {
@@ -110,28 +110,6 @@ export abstract class BaseModel {
             }
         }
     }
-
-    {{!-- /**
-     * set values in model properties for added form controls
-     * Note: arrays (FormArray) are not supported.
-     */
-    protected formGroupValuesToModelOfAttachedFormControls(formGroup: FormGroup) {
-        if (formGroup) {
-            const rawValues = formGroup.getRawValue();
-            for (const key in this.addedFormControls) {
-                const control = this.addedFormControls[key];
-                if (control instanceof FormControl) {
-                    this[key] = rawValues[key];
-                } else if (control instanceof FormGroup) {
-                    this[key].formGroupValuesToModel(rawValues[key].$formGroup);
-                } else if (control instanceof FormArray) {
-                    throw new Error(`control of type FormArray not supported here`);
-                } else {
-                    throw new Error(`control of type ${control} not supported here`);
-                }
-            }
-        }
-    } --}}
 
     /**
      * set values in added form controls
