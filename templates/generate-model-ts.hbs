@@ -78,7 +78,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
             const rawValues = this.getValuesToUse(values, useFormGroupValuesToModel);
 {{#properties}}
     {{#if isArray}}
-            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', rawValues.{{name}}, useFormGroupValuesToModel, SubTypeFactory.createSubTypeInstance{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', rawValues.{{name}}, useFormGroupValuesToModel{{#if isArrayComplexType}}, {{arrayTypeName}}, SubTypeFactory.createSubTypeInstance{{/if}});
     {{else}}
         {{#if isComplexType}}
             {{#if type.isBaseType}}

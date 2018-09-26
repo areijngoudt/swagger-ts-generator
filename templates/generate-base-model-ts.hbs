@@ -130,13 +130,18 @@ export abstract class BaseModel {
         }
     }
 
+    /**
+     * fill array property in model.
+     * for complex types, type must be defined.
+     * for complex types with subtypes, subTypeFactoryFn must be filled in.
+     */
     protected fillModelArray<T>(
         object: BaseModel, 
         key: string, 
         values: Array<T>, 
         useFormGroupValuesToModel: boolean,
-        subTypeFactoryFn: Function, 
-        type = undefined
+        type = undefined,
+        subTypeFactoryFn: Function = undefined
     ): void {
         if (values) {
             object[key] = new Array<T>();
