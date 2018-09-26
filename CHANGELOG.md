@@ -3,6 +3,7 @@
 ### 1.1.40
 
 addFormControl and setFormGroupValuesInAddedFormControls added to BaseModel
+switched parameters type and subTypeFactoryFn in BaseModel.fillModelArray
 
 ### 1.1.39
 

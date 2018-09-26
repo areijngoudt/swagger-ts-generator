@@ -1,3 +1,5 @@
+const util = require('util')
+
 import { readdirSync, unlinkSync } from "fs";
 import { normalize, join } from "path";
 import {
@@ -117,9 +119,11 @@ export function generateModelTSFiles(
     MODEL_SUFFIX,
     MODEL_FILE_SUFFIX
   );
+  // console.log('typeCollection', util.inspect(typeCollection, false, null, true))
 
   // group types per namespace
   let namespaceGroups = getNamespaceGroups(typeCollection, options);
+  // console.log('namespaceGroups', namespaceGroups);
   // generate model files
   generateTSModels(namespaceGroups, folder, options);
   // generate subTypeFactory
