@@ -82,7 +82,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
     {{else}}
         {{#if isComplexType}}
             {{#if type.isBaseType}}
-            if (rawValues.{{name}}.{{{../../subTypePropertyName}}} &&
+            if (rawValues.{{name}} && rawValues.{{name}}.{{{../../subTypePropertyName}}} &&
                 this.{{name}}.{{{../../subTypePropertyName}}} !== rawValues.{{name}}.{{{../../subTypePropertyName}}}) {
                 this.{{name}} = SubTypeFactory.createSubTypeInstance(rawValues.{{name}}) as {{typeName}};
             }
