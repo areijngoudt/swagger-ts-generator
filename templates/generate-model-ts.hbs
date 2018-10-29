@@ -37,7 +37,7 @@ export interface {{{typeName}}} {
 {{#if ../generateClasses}}
 
 export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{else}}BaseModel{{/if}} implements I{{{typeName}}}  {
-{{#if isSubType}}    
+{{#if hasSubTypeProperty}}    
     static {{{../subTypePropertyConstantName}}} = '{{{fullTypeName}}}';
 {{/if}}
 {{#properties}}
@@ -54,7 +54,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
     */
     constructor(values?: any, useFormGroupValuesToModel = false) {
         super();
-{{#if isSubType}}
+{{#if hasSubTypeProperty}}
 
         this.{{{../subTypePropertyName}}} = {{{typeName}}}.{{{../subTypePropertyConstantName}}};
 {{/if}}

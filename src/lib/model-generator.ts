@@ -1,4 +1,4 @@
-const util = require('util')
+const util = require("util");
 
 import { readdirSync, unlinkSync } from "fs";
 import { normalize, join } from "path";
@@ -49,6 +49,7 @@ interface Type {
   fullTypeName: string;
   importFile: string;
   isSubType: boolean;
+  hasSubTypeProperty: boolean;
   isBaseType: boolean;
   baseType: Type;
   baseImportFile: string;
@@ -104,8 +105,8 @@ export function generateModelTSFiles(
   swagger: Swagger,
   options: GeneratorOptions
 ) {
-  let folder = normalize(options.modelFolder);
 
+  let folder = normalize(options.modelFolder);
   // generate fixed file with non-standard validators for validation rules which can be defined in the swagger file
   if (options.generateValidatorFile) {
     generateTSValidations(folder, options);
@@ -248,6 +249,7 @@ function getTypeDefinition(
   let baseType = undefined;
   let baseImportFile = undefined;
   let isSubType = getIsSubType(item);
+  let hasSubTypeProperty = isSubType || getHasSubTypeProperty(properties, options);
   if (isSubType) {
     baseType = getBaseType(typeName, typeCollection, item, options);
     // baseType might not be in the typeCollection yet
@@ -274,6 +276,7 @@ function getTypeDefinition(
     fullNamespace: fullNamespace,
     fullTypeName: fullTypeName,
     isSubType: isSubType,
+    hasSubTypeProperty: hasSubTypeProperty,
     importFile: importFile,
     isBaseType: false, // set elsewhere
     baseType: baseType,
@@ -700,6 +703,13 @@ function getIsSubType(item: SwaggerDefinition) {
   return item.allOf !== undefined;
 }
 
+function getHasSubTypeProperty(
+  properties: SwaggerDefinitionProperties,
+  options: GeneratorOptions
+) {
+  return has(properties, options.subTypePropertyName);
+}
+
 function getBaseType(
   superTypeName: string,
   typeCollection: Type[],
@@ -955,7 +965,7 @@ function generateSubTypeFactory(
   let template = readAndCompileTemplateFile(options.templates.subTypeFactory);
   for (let key in namespaceGroups) {
     data.subTypes = namespaceGroups[key].filter(type => {
-      return type.isSubType;
+      return type.hasSubTypeProperty;
     });
     let namespacePath = namespaceGroups[key][0]
       ? namespaceGroups[key][0].path

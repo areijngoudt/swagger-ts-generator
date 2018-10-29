@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.1.48
+- generate subtype stuff when a class had the subTypeProperty
+
 ### 1.1.45
 
 - addFormControl and setFormGroupValuesInAddedFormControls added to BaseModel.
