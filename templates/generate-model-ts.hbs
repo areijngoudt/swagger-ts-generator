@@ -40,6 +40,11 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
 {{#if hasSubTypeProperty}}    
     static {{{../subTypePropertyConstantName}}} = '{{{fullTypeName}}}';
 {{/if}}
+
+{{#properties}}
+    static {{staticFieldName}} = '{{name}}';
+{{/properties}}
+
 {{#properties}}
     {{#if description}}
     /** {{{description}}} */
@@ -78,7 +83,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
             const rawValues = this.getValuesToUse(values, useFormGroupValuesToModel);
 {{#properties}}
     {{#if isArray}}
-            this.fillModelArray<{{arrayTypeName}}>(this, '{{name}}', rawValues.{{name}}, useFormGroupValuesToModel{{#if isArrayComplexType}}, {{arrayTypeName}}, SubTypeFactory.createSubTypeInstance{{/if}});
+            this.fillModelArray<{{arrayTypeName}}>(this, {{../fullTypeName}}.{{staticFieldName}}, rawValues.{{name}}, useFormGroupValuesToModel{{#if isArrayComplexType}}, {{arrayTypeName}}, SubTypeFactory.createSubTypeInstance{{/if}});
     {{else}}
         {{#if isComplexType}}
             {{#if type.isBaseType}}
@@ -116,7 +121,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
 {{#properties}}
 {{#if isArray}}
             // generate FormArray control elements
-            this.fillFormArray<{{arrayTypeName}}>('{{name}}', this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+            this.fillFormArray<{{arrayTypeName}}>({{../fullTypeName}}.{{staticFieldName}}, this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
 {{/if}}
 {{/properties}}
         }
@@ -129,11 +134,11 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
     setFormGroupValues() {
 {{#properties}}
 {{#if isArray}}
-        this.fillFormArray<{{arrayTypeName}}>('{{name}}', this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
+        this.fillFormArray<{{arrayTypeName}}>({{../fullTypeName}}.{{staticFieldName}}, this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
 {{else if isImportType}}
         this.{{name}}.setFormGroupValues();
 {{else}}
-        this.$formGroup.controls['{{name}}'].setValue(this.{{name}});
+        this.$formGroup.controls[{{../fullTypeName}}.{{staticFieldName}}].setValue(this.{{name}});
 {{/if}}
 {{/properties}}
         // set formValues in added formControls

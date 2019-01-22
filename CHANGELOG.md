@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.1.49
+- generate static xxx_FIELD_NAME fields in the models
+
 ### 1.1.48
 - generate subtype stuff when a class had the subTypeProperty
 

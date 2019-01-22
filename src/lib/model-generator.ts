@@ -60,6 +60,7 @@ interface Type {
 
 interface TypeProperty {
   name: string;
+  staticFieldName: string;
   type: Type;
   typeName: string;
   namespace: string;
@@ -404,6 +405,7 @@ function getTypePropertyDefinition(
   suffix: string,
   fileSuffix: string
 ) {
+  const staticFieldName = `${snakeCase(key).toUpperCase()}_FIELD_NAME`;
   let isRefType = !!item.$ref;
   let isArray = item.type == "array";
   let isEnum =
@@ -447,6 +449,7 @@ function getTypePropertyDefinition(
     isEnum && getIsUniqueImportEnumType(importEnumType, type.properties); // import this enumType
   let property = {
     name: key,
+    staticFieldName: staticFieldName,
     type: null, // filled elsewhere
     typeName: propertyType.typeName,
     namespace: propertyType.namespace,
