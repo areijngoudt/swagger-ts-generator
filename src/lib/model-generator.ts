@@ -31,7 +31,8 @@ import {
   getTypeFromDescription,
   getDirectories,
   removeFolder,
-  removeExtension
+  removeExtension,
+  checkExclution
 } from "./utils";
 import { GeneratorOptions } from "../bootstrap/options";
 import {
@@ -311,7 +312,7 @@ function fillMissingBaseTypes(
   // console.log('-------------------> In fillMissingBaseTypes <---------------------------')
   forEach(swagger.definitions, (item, key) => {
     let isSubType = getIsSubType(item);
-    let type = findTypeInTypeCollection(typeCollection, key);
+    let type = findTypeInTypeCollection(typeCollection, getTypeName(key, options));
     if (isSubType && !type.baseType) {
       let namespace = getNamespace(key, options, true);
       let pathToRoot = getPathToRoot(namespace);
@@ -834,10 +835,9 @@ function getNamespaceGroups(typeCollection: Type[], options: GeneratorOptions) {
   for (let i = 0; i < typeCollection.length; ++i) {
     let type = typeCollection[i];
     let namespace = type.namespace || ROOT_NAMESPACE;
-    if (excludeNamespace(namespace, options.exclude)) {
+    if (checkExclution(namespace, options.exclude)) {
       continue;
     }
-
     if (!namespaces[namespace]) {
       namespaces[namespace] = [];
     }
@@ -885,7 +885,6 @@ function generateTSModels(
     ).toUpperCase(),
     type: undefined
   };
-  console.log(data);
   let template = readAndCompileTemplateFile(options.templates.models);
   ensureFolder(folder);
   for (let namespace in namespaceGroups) {
