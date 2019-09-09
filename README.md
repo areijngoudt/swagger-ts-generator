@@ -556,6 +556,18 @@ export class AllEnums {
   gender = gender;
   hairColor = hairColor;
 }
+
+/**
+* union type of all enums.
+* Useful for typing params and variables in generic components.
+*/
+export type AllEnumsType =
+    | red
+    | blond
+    | brown
+    | black
+    | white
+    ;
 ```
 
 Normally enums are numbers based in TypeScript. In out Webapi's whe use stringbased Enums.
