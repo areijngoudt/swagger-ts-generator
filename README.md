@@ -562,11 +562,9 @@ export class AllEnums {
 * Useful for typing params and variables in generic components.
 */
 export type AllEnumsType =
-    | red
-    | blond
-    | brown
-    | black
-    | white
+    | type
+    | gender
+    | haircolor
     ;
 ```
 

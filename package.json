@@ -1,42 +1,42 @@
 {
-  "name": "swagger-ts-generator",
-  "version": "1.1.56",
-  "description": "Given a swagger.json file, generates a number of TypeScript files which can be used as models and model-driven forms in Angular 2 (and above)",
-  "main": "index.js",
-  "scripts": {
-    "start": "tsc --watch",
-    "dist": "tsc",
-    "publish-patch": "npm version patch && npm publish"
-  },
-  "keywords": [
-    "Swagger",
-    "Code Generator",
-    "models",
-    "Angular",
-    "Angular2+",
-    "Angular 2+",
-    "ngx",
-    "model-driven forms",
-    "reactive forms"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/areijngoudt/swagger-ts-generator"
-  },
-  "author": "Ad Reijngoudt <areijngoudt@gmail.com>",
-  "license": "ISC",
-  "dependencies": {
-    "fs": "0.0.2",
-    "handlebars": "^4.0.11",
-    "lodash": "^4.17.10",
-    "moment": "^2.20.1",
-    "path": "^0.12.7"
-  },
-  "devDependencies": {
-    "@types/handlebars": "^4.0.37",
-    "@types/lodash": "^4.14.109",
-    "@types/node": "^10.3.1",
-    "typescript": "^2.9.1",
-    "util": "^0.11.0"
-  }
+    "name": "swagger-ts-generator",
+    "version": "1.1.57",
+    "description": "Given a swagger.json file, generates a number of TypeScript files which can be used as models and model-driven forms in Angular 2 (and above)",
+    "main": "index.js",
+    "scripts": {
+        "start": "tsc --watch",
+        "dist": "tsc",
+        "publish-patch": "npm version patch && npm publish"
+    },
+    "keywords": [
+        "Swagger",
+        "Code Generator",
+        "models",
+        "Angular",
+        "Angular2+",
+        "Angular 2+",
+        "ngx",
+        "model-driven forms",
+        "reactive forms"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/areijngoudt/swagger-ts-generator"
+    },
+    "author": "Ad Reijngoudt <areijngoudt@gmail.com>",
+    "license": "ISC",
+    "dependencies": {
+        "fs": "0.0.2",
+        "handlebars": "^4.0.11",
+        "lodash": "^4.17.10",
+        "moment": "^2.20.1",
+        "path": "^0.12.7"
+    },
+    "devDependencies": {
+        "@types/handlebars": "^4.0.37",
+        "@types/lodash": "^4.14.109",
+        "@types/node": "^10.3.1",
+        "typescript": "^2.9.1",
+        "util": "^0.11.0"
+    }
 }
