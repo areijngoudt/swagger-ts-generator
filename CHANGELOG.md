@@ -1,5 +1,7 @@
 # CHANGELOG
 
+### 1.1.53
+- generate AllEnumsType in enums
 ### 1.1.49
 - generate static xxx_FIELD_NAME fields in the models
 

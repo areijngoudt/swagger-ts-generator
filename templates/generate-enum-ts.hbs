@@ -48,4 +48,14 @@ export class AllEnums {
     {{type}} = {{type}};
 {{/enumTypeCollection}}
 }
+
+/**
+* union type of all enums.
+* Useful for typing params and variables in generic components.
+*/
+export type AllEnumsType =
+{{#enumTypeCollection}}
+    | {{type}}
+{{/enumTypeCollection}}
+    ;
 {{/if}}
