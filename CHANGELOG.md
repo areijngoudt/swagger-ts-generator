@@ -1,7 +1,11 @@
 # CHANGELOG
 
-### 1.1.53
+### 1.1.59
+- fixed compile error
+
+### 1.1.58
 - generate AllEnumsType in enums
+
 ### 1.1.49
 - generate static xxx_FIELD_NAME fields in the models
 

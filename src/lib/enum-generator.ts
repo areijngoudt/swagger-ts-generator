@@ -141,20 +141,21 @@ function filterEnumDefinitions(
     options: GeneratorOptions,
     enumArrayType?: string
 ) {
-    forEach(node, function (item, key) {
-        if (isObject(item) && !isInTypesToFilter(item, key, options)) {
-            if (item.enum) {
+    forEach(node, (item, key) => {
+        const itemDef = item as SwaggerDefinition;
+        if (isObject(itemDef)  && !isInTypesToFilter(itemDef, key, options)) {
+            if (itemDef.enum) {
                 let type = enumArrayType ? enumArrayType : key;
-                let values = item.enum;
+                let values = itemDef.enum;
                 let enumType: EnumType = {
                     type,
                     valuesAndLabels: getEnumValuesAndLabels(values),
                     joinedValues: undefined
                 };
                 // description may contain an overrule type, eg /** type coverType */
-                if (hasTypeFromDescription(item.description)) {
+                if (hasTypeFromDescription(itemDef.description)) {
                     enumType.type = lowerFirst(
-                        getTypeFromDescription(item.description)
+                        getTypeFromDescription(itemDef.description)
                     );
                 }
                 // add string with joined values so enums with the same values can be detected
@@ -165,15 +166,15 @@ function filterEnumDefinitions(
             } else {
                 // enum array's has enum definition one level below (under "items")
                 let enumArrayType = undefined;
-                if (item.type === "array") {
+                if (itemDef.type === "array") {
                     enumArrayType = key;
-                    if (hasTypeFromDescription(item.description)) {
+                    if (hasTypeFromDescription(itemDef.description)) {
                         enumArrayType = lowerFirst(
-                            getTypeFromDescription(item.description)
+                            getTypeFromDescription(itemDef.description)
                         );
                     }
                 }
-                filterEnumDefinitions(enumTypeCollection, item, options, enumArrayType);
+                filterEnumDefinitions(enumTypeCollection, itemDef, options, enumArrayType);
             }
         }
     });
