@@ -5,17 +5,10 @@
         "outDir": "./",
         "sourceMap": false,
         "declaration": true,
-        "typeRoots": [
-
-        ]
+        // "typeRoots": []
+        "types": ["jest"]
     },
-    "files": [
-        "./node_modules/@types/node/index.d.ts"
-    ],
-    "include": [
-        "src/**/*.ts"
-    ],
-    "exclude": [
-        "node_modules"
-    ]
+    "files": ["./node_modules/@types/node/index.d.ts"],
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules"]
 }

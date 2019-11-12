@@ -3,6 +3,8 @@ NULL.log
 .DS_Store
 .npm-debug.log
 
+/test-gen/*
+
 # Compiled js
 **/*.js
 **/*.d.ts

@@ -64,13 +64,10 @@ function config() {
     };
     var files = {
         swaggerJson: 'swagger.json'
-        //swaggerJson: 'swagger-zib.json',
-        //swaggerJson: 'swagger-zib-v2.json',
     };
 
     var swagger = {
         url: 'http://petstore.swagger.io/v2/swagger.json',
-        //url: 'http://127.0.0.1/ZIB.WebApi.v2/swagger/docs/v1',
         swaggerFile: folders.swaggerFolder + files.swaggerJson,
         swaggerFolder: folders.swaggerFolder,
         swaggerTSGeneratorOptions: {

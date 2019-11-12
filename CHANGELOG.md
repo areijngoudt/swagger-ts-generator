@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.2.2
+
+-   added some unit tests to test generated code
+
 ### 1.2.1
 
 -   added generateFormGroups option
