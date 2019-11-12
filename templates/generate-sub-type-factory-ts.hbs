@@ -12,11 +12,11 @@ export class SubTypeFactory {
     /**
      * create subType based on the value if the typeSelector property
      */
-    static createSubTypeInstance(value: any, useFormGroupValuesToModel = false): object {
+    static createSubTypeInstance(value: any{{#if generateFormGroups}}, useFormGroupValuesToModel = false{{/if}}): object {
         switch (value.{{subTypePropertyName}}) {
 {{#subTypes}}
             case '{{fullTypeName}}':
-                return new {{typeName}}(value, useFormGroupValuesToModel);
+                return new {{typeName}}(value{{#if generateFormGroups}}, useFormGroupValuesToModel{{/if}});
 {{/subTypes}}
             default:
                 throw new Error(`${value.typeSelector} not supported here`);

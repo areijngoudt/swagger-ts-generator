@@ -4,11 +4,12 @@
 */
 /* tslint:disable */
 {{#if generateClasses}}
+{{#if generateFormGroups}}
 import { Validators, FormControl, FormGroup, FormArray, ValidatorFn } from '@angular/forms';
 import { minValueValidator, maxValueValidator, enumValidator } from '{{type.pathToRoot}}{{validatorFileName}}';
+{{/if}}
 import { BaseModel } from '{{type.pathToRoot}}{{baseModelFileName}}';
 import { SubTypeFactory } from '{{type.pathToRoot}}{{subTypeFactoryFileName}}';
-
 {{/if}}
 
 {{#with type}}
@@ -37,7 +38,7 @@ export interface {{{typeName}}} {
 {{#if ../generateClasses}}
 
 export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{else}}BaseModel{{/if}} implements I{{{typeName}}}  {
-{{#if hasSubTypeProperty}}    
+{{#if hasSubTypeProperty}}
     static {{{../subTypePropertyConstantName}}} = '{{{fullTypeName}}}';
 {{/if}}
 
@@ -55,9 +56,9 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
     /**
      * constructor
      * @param values Can be used to set a webapi response or formValues to this newly constructed model
-     * @useFormGroupValuesToModel if true use formValues
+    {{#if ../generateFormGroups}}* @useFormGroupValuesToModel if true use formValues{{/if}}
     */
-    constructor(values?: any, useFormGroupValuesToModel = false) {
+    constructor(values?: any{{#if ../generateFormGroups}}, useFormGroupValuesToModel = false{{/if}}) {
         super();
 {{#if hasSubTypeProperty}}
 
@@ -70,7 +71,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
 {{/properties}}
 
         if (values) {
-            this.setValues(values, useFormGroupValuesToModel);
+            this.setValues(values{{#if ../generateFormGroups}}, useFormGroupValuesToModel{{/if}});
         }
     }
 
@@ -78,12 +79,12 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
      * set the values.
      * @param values Can be used to set a webapi response to this newly constructed model
     */
-    setValues(values: any, useFormGroupValuesToModel = false): void {
+    setValues(values: any{{#if ../generateFormGroups}}, useFormGroupValuesToModel = false{{/if}}): void {
         if (values) {
-            const rawValues = this.getValuesToUse(values, useFormGroupValuesToModel);
+            const rawValues = {{#if ../generateFormGroups}}this.getValuesToUse(values, useFormGroupValuesToModel);{{else}}values{{/if}}
 {{#properties}}
     {{#if isArray}}
-            this.fillModelArray<{{arrayTypeName}}>(this, {{../fullTypeName}}.{{staticFieldName}}, rawValues.{{name}}, useFormGroupValuesToModel{{#if isArrayComplexType}}, {{arrayTypeName}}, SubTypeFactory.createSubTypeInstance{{/if}});
+            this.fillModelArray<{{arrayTypeName}}>(this, {{../fullTypeName}}.{{staticFieldName}}, rawValues.{{name}}{{#if ../generateFormGroups}}, useFormGroupValuesToModel{{/if}}{{#if isArrayComplexType}}, {{arrayTypeName}}, SubTypeFactory.createSubTypeInstance{{/if}});
     {{else}}
         {{#if isComplexType}}
             {{#if type.isBaseType}}
@@ -92,17 +93,20 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
                 this.{{name}} = SubTypeFactory.createSubTypeInstance(rawValues.{{name}}) as {{typeName}};
             }
             {{/if}}
-            this.{{name}}.setValues(rawValues.{{name}}, useFormGroupValuesToModel);
+            this.{{name}}.setValues(rawValues.{{name}}{{#if ../generateFormGroups}}, useFormGroupValuesToModel{{/if}});
         {{else}}
-            this.{{name}} = rawValues.{{name}};
+            this.{{name}} = this.getValue<{{typeName}}>(rawValues, {{../fullTypeName}}.{{staticFieldName}});
         {{/if}}
     {{/if}}
 {{/properties}}
+            {{#if ../generateFormGroups}}
             // set values in model properties for added formControls
             super.setValuesInAddedPropertiesOfAttachedFormControls(values, useFormGroupValuesToModel);
+            {{/if}}
         }
     }
 
+{{#if ../generateFormGroups}}
     protected getFormGroup(): FormGroup {
         if (!this._formGroup) {
             this._formGroup = new FormGroup({
@@ -144,7 +148,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
         // set formValues in added formControls
         super.setFormGroupValuesInAddedFormControls();
     }
+{{/if}}
 }
-
 {{/if}}
 {{/with}}

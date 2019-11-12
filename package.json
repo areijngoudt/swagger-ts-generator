@@ -1,6 +1,6 @@
 {
     "name": "swagger-ts-generator",
-    "version": "1.1.59",
+    "version": "1.2.0",
     "description": "Given a swagger.json file, generates a number of TypeScript files which can be used as models and model-driven forms in Angular 2 (and above)",
     "main": "index.js",
     "scripts": {
@@ -27,16 +27,16 @@
     "license": "ISC",
     "dependencies": {
         "fs": "0.0.2",
-        "handlebars": "^4.0.11",
-        "lodash": "^4.17.10",
-        "moment": "^2.20.1",
+        "handlebars": "^4.5.1",
+        "lodash": "^4.17.15",
+        "moment": "^2.24.0",
         "path": "^0.12.7"
     },
     "devDependencies": {
-        "@types/handlebars": "^4.0.37",
-        "@types/lodash": "^4.14.109",
+        "@types/handlebars": "^4.1.0",
+        "@types/lodash": "^4.14.146",
         "@types/node": "^10.3.1",
         "typescript": "^2.9.1",
-        "util": "^0.11.0"
+        "util": "^0.12.1"
     }
 }

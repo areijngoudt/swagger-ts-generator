@@ -4,11 +4,14 @@
 */
 /* tslint:disable */
 
+{{#if generateFormGroups}}
 import { ValidatorFn } from '@angular/forms';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
+{{/if}}
 
 export abstract class BaseModel {
- 
+
+{{#if generateFormGroups}}
     constructor() {
         // define non enumerable properties so these are omitted in JSON.stringify.
         Object.defineProperty(this, "$formGroup", {
@@ -28,6 +31,7 @@ export abstract class BaseModel {
             writable: true
         });
     }
+{{/if}}
 
     /**
      * set the values.
@@ -36,25 +40,64 @@ export abstract class BaseModel {
     abstract setValues(values: any): void;
 
     /**
+     * fill array property in model.
+     * for complex types, type must be defined.
+     * for complex types with subtypes, subTypeFactoryFn must be filled in.
+     */
+    protected fillModelArray<T>(
+        object: BaseModel,
+        key: string,
+        values: Array<T>,
+        {{#if generateFormGroups}}useFormGroupValuesToModel: boolean,{{/if}}
+        type = undefined,
+        subTypeFactoryFn: Function = undefined
+    ): void {
+        if (values) {
+            object[key] = new Array<T>();
+            for(let value of values) {
+                if (type) {
+                    if (this.isSubType(value)) {
+                        const subTypeInstance = subTypeFactoryFn(value{{#if generateFormGroups}}, useFormGroupValuesToModel{{/if}});
+                        object[key].push(subTypeInstance);
+                    } else {
+                        object[key].push(new type(value{{#if generateFormGroups}}, useFormGroupValuesToModel{{/if}}));
+                    }
+                } else {
+                    object[key].push(value);
+                }
+            }
+        }
+    }
+
+    protected isSubType(value: any): boolean {
+        return value.hasOwnProperty('{{{subTypePropertyName}}}') && value.{{{subTypePropertyName}}};
+    }
+
+    protected getValue<T>(values: any, propertyName: string): T {
+        return values.hasOwnProperty(propertyName) ? values[propertyName] : this[propertyName];
+    }
+
+{{#if generateFormGroups}}
+    /**
      * set the FormGroup values to the model values.
     */
     abstract setFormGroupValues();
 
-    /** 
-     * use $formGroup in angular's formBuilder to make a model driven (reactive) form. 
+    /**
+     * use $formGroup in angular's formBuilder to make a model driven (reactive) form.
      *   this.form = this.formBuilder.group({
      *       pet: this.pet.$formGroup,
-     *   }); 
+     *   });
     */
     $formGroup: FormGroup;
 
     protected _formGroup: FormGroup;
     protected abstract getFormGroup(): FormGroup;
 
-    /** 
+    /**
      * add one or more additional validators to the control
-     * @param key Name of the control (is the same as the name of the attached model property) 
-     * @param validators Validator(s) to add to the control 
+     * @param key Name of the control (is the same as the name of the attached model property)
+     * @param validators Validator(s) to add to the control
     */
     addValidatorToControl(key: string, validators: ValidatorFn | ValidatorFn[]) {
         let control = this.$formGroup.controls[key];
@@ -130,40 +173,6 @@ export abstract class BaseModel {
         }
     }
 
-    /**
-     * fill array property in model.
-     * for complex types, type must be defined.
-     * for complex types with subtypes, subTypeFactoryFn must be filled in.
-     */
-    protected fillModelArray<T>(
-        object: BaseModel, 
-        key: string, 
-        values: Array<T>, 
-        useFormGroupValuesToModel: boolean,
-        type = undefined,
-        subTypeFactoryFn: Function = undefined
-    ): void {
-        if (values) {
-            object[key] = new Array<T>();
-            for(let value of values) {
-                if (type) {
-                    if (this.isSubType(value)) {
-                        const subTypeInstance = subTypeFactoryFn(value, useFormGroupValuesToModel);
-                        object[key].push(subTypeInstance);
-                    } else {
-                        object[key].push(new type(value, useFormGroupValuesToModel));
-                    }
-                } else {
-                    object[key].push(value);
-                }
-            }
-            // generate FormArray control elements
-            // this.fillFormArray<T>(key, object[key], type);
-        }
-    }
-    protected isSubType(value: any): boolean {
-        return value.hasOwnProperty('{{{subTypePropertyName}}}') && value.{{{subTypePropertyName}}};
-    }
     protected getValuesToUse(values: any, useFormGroupValuesToModel: boolean) {
         let result = values;
         if (useFormGroupValuesToModel) {
@@ -195,9 +204,10 @@ export abstract class BaseModel {
         if (formGroup) {
             let formArray = <FormArray>formGroup.controls[key];
             for (let i = formArray.length-1; i >= 0; i--) {
-                formArray.removeAt(i);                    
+                formArray.removeAt(i);
             }
             return formArray;
         }
     }
+    {{/if}}
 }

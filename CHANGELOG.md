@@ -1,23 +1,31 @@
 # CHANGELOG
 
+### 1.2.1
+
+-   added generateFormGroups option
+
 ### 1.1.59
-- fixed compile error
+
+-   fixed compile error
 
 ### 1.1.58
-- generate AllEnumsType in enums
+
+-   generate AllEnumsType in enums
 
 ### 1.1.49
-- generate static xxx_FIELD_NAME fields in the models
+
+-   generate static xxx_FIELD_NAME fields in the models
 
 ### 1.1.48
-- generate subtype stuff when a class had the subTypeProperty
+
+-   generate subtype stuff when a class had the subTypeProperty
 
 ### 1.1.45
 
-- addFormControl and setFormGroupValuesInAddedFormControls added to BaseModel.
-- better support for subTypes in generated models and baseModel
-- SubTypeFactory is now generated
-- switched parameters type and subTypeFactoryFn in BaseModel.fillModelArray
+-   addFormControl and setFormGroupValuesInAddedFormControls added to BaseModel.
+-   better support for subTypes in generated models and baseModel
+-   SubTypeFactory is now generated
+-   switched parameters type and subTypeFactoryFn in BaseModel.fillModelArray
 
 ### 1.1.39
 
@@ -83,7 +91,7 @@ enumGenerator: option enumI18NHtmlFile added.
 
 ### 1.1.22
 
-modelGenerator: now supportes enums which are defined with $ref
+modelGenerator: now supportes enums which are defined with \$ref
 
 ### 1.1.21
 

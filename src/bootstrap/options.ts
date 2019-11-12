@@ -4,6 +4,7 @@ export interface GeneratorOptions {
 
   generateBarrelFiles?: boolean;
   generateClasses?: boolean;
+  generateFormGroups?: boolean;
   generateValidatorFile?: boolean;
   baseModelFileName?: string;
   subTypeFactoryFileName?: string;

@@ -155,7 +155,8 @@ function generateTSBaseModel(folder: string, options: GeneratorOptions) {
 
   let outputFileName = join(folder, options.baseModelFileName);
   let data = {
-    subTypePropertyName: options.subTypePropertyName
+    subTypePropertyName: options.subTypePropertyName,
+    generateFormGroups: options.generateFormGroups,
   };
   let template = readAndCompileTemplateFile(options.templates.baseModel);
   let result = template(data);
@@ -872,6 +873,7 @@ function generateTSModels(
 ) {
   let data = {
     generateClasses: options.generateClasses,
+    generateFormGroups: options.generateFormGroups,
     hasComplexType: false,
     validatorFileName: removeExtension(options.validatorsFileName),
     baseModelFileName: removeExtension(options.baseModelFileName),
@@ -963,7 +965,8 @@ function generateSubTypeFactory(
 ) {
   let data = {
     subTypes: undefined,
-    subTypePropertyName: options.subTypePropertyName
+    subTypePropertyName: options.subTypePropertyName,
+    generateFormGroups: options.generateFormGroups,
   };
   let template = readAndCompileTemplateFile(options.templates.subTypeFactory);
   for (let key in namespaceGroups) {

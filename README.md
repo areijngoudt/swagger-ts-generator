@@ -21,19 +21,19 @@ Create a simple `.js` file and run it using `node path/to/file.js`
 You can then run this from `npm` by adding the `node` line from above as a task in your `package.json`
 
 ```typescript
-const { generateTSFiles } = require("swagger-ts-generator");
+const { generateTSFiles } = require('swagger-ts-generator');
 
 const config = {
-  file: __dirname + "\\swagger.json"
+    file: __dirname + '\\swagger.json'
 };
 
 generateTSFiles(
-  config.file, // This can be either a file containing the Swagger json or the Swagger object itself
-  {
-    modelFolder: "./path/to/models",
-    enumTSFile: "./path/to/models/enums.ts"
-    // + optionally more configuration
-  }
+    config.file, // This can be either a file containing the Swagger json or the Swagger object itself
+    {
+        modelFolder: './path/to/models',
+        enumTSFile: './path/to/models/enums.ts'
+        // + optionally more configuration
+    }
 );
 ```
 
@@ -43,64 +43,64 @@ generateTSFiles(
 
 Create a `gulp.config` file with the settings you want:
 
-- generateClasses (default: true) - If this flag is set to false, the generator will output only interfaces and enums. It will not output classes and validators.
+-   generateClasses (default: true) - If this flag is set to false, the generator will output only interfaces and enums. It will not output classes and validators.
 
 ```javascript
-"use strict";
+'use strict';
 
 module.exports = config();
 
 function config() {
-  var root = "./src/";
-  var srcAppFolder = root + "app/";
-  var folders = {
-    // root
-    root: root,
-    // sources
-    srcWebapiFolder: srcAppFolder + "models/webapi/",
-    srcLanguagesFolder: root + "assets/i18n/",
-    // swagger
-    swaggerFolder: root + "swagger/"
-  };
-  var files = {
-    swaggerJson: "swagger.json"
-    //swaggerJson: 'swagger-zib.json',
-    //swaggerJson: 'swagger-zib-v2.json',
-  };
+    var root = './src/';
+    var srcAppFolder = root + 'app/';
+    var folders = {
+        // root
+        root: root,
+        // sources
+        srcWebapiFolder: srcAppFolder + 'models/webapi/',
+        srcLanguagesFolder: root + 'assets/i18n/',
+        // swagger
+        swaggerFolder: root + 'swagger/'
+    };
+    var files = {
+        swaggerJson: 'swagger.json'
+        //swaggerJson: 'swagger-zib.json',
+        //swaggerJson: 'swagger-zib-v2.json',
+    };
 
-  var swagger = {
-    url: "http://petstore.swagger.io/v2/swagger.json",
-    //url: 'http://127.0.0.1/ZIB.WebApi.v2/swagger/docs/v1',
-    swaggerFile: folders.swaggerFolder + files.swaggerJson,
-    swaggerFolder: folders.swaggerFolder,
-    swaggerTSGeneratorOptions: {
-      modelFolder: folders.srcWebapiFolder,
-      enumTSFile: folders.srcWebapiFolder + "enums.ts",
-      enumI18NHtmlFile: folders.enumI18NHtmlFolder + "enum-i18n.component.html",
-      enumLanguageFiles: [
-        folders.srcLanguagesFolder + "nl.json",
-        folders.srcLanguagesFolder + "en.json"
-      ],
-      generateClasses: true,
-      modelModuleName: "webapi.models",
-      enumModuleName: "webapi.enums",
-      enumRef: "./enums",
-      subTypePropertyName: "typeSelector",
-      namespacePrefixesToRemove: [],
-      typeNameSuffixesToRemove: [],
-      typesToFilter: [
-        "ModelAndView", // Springfox artifact
-        "View" // Springfox artifact
-      ]
-    }
-  };
+    var swagger = {
+        url: 'http://petstore.swagger.io/v2/swagger.json',
+        //url: 'http://127.0.0.1/ZIB.WebApi.v2/swagger/docs/v1',
+        swaggerFile: folders.swaggerFolder + files.swaggerJson,
+        swaggerFolder: folders.swaggerFolder,
+        swaggerTSGeneratorOptions: {
+            modelFolder: folders.srcWebapiFolder,
+            enumTSFile: folders.srcWebapiFolder + 'enums.ts',
+            enumI18NHtmlFile: folders.enumI18NHtmlFolder + 'enum-i18n.component.html',
+            enumLanguageFiles: [folders.srcLanguagesFolder + 'nl.json', folders.srcLanguagesFolder + 'en.json'],
+            generateBarrelFiles: false,
+            generateClasses: true,
+            generateFormGroups: true,
+            generateValidatorFile: true,
+            modelModuleName: 'webapi.models',
+            enumModuleName: 'webapi.enums',
+            enumRef: './enums',
+            subTypePropertyName: 'typeSelector',
+            namespacePrefixesToRemove: [],
+            typeNameSuffixesToRemove: [],
+            typesToFilter: [
+                'ModelAndView', // Springfox artifact
+                'View' // Springfox artifact
+            ]
+        }
+    };
 
-  var config = {
-    root: root,
-    files: files,
-    swagger: swagger
-  };
-  return config;
+    var config = {
+        root: root,
+        files: files,
+        swagger: swagger
+    };
+    return config;
 }
 ```
 
@@ -110,66 +110,63 @@ Create a `gulpfile.js`:
 
 ```javascript
 /*global __dirname */
-"use strict";
+'use strict';
 
-var gulp = require("gulp");
+var gulp = require('gulp');
 
-var $ = require("gulp-load-plugins")({ lazy: true });
-var args = require("yargs").argv;
-var swaggerTSGenerator = require("swagger-ts-generator");
-var request = require("request");
-var source = require("vinyl-source-stream");
+var $ = require('gulp-load-plugins')({ lazy: true });
+var args = require('yargs').argv;
+var swaggerTSGenerator = require('swagger-ts-generator');
+var request = require('request');
+var source = require('vinyl-source-stream');
 
-var config = require("./gulp.config");
+var config = require('./gulp.config');
 
 //--------------- gulp tasks ---------------
 
-gulp.task("default", ["show-help"]); // Set default gulp tasks
-gulp.task("show-help", $.taskListing);
+gulp.task('default', ['show-help']); // Set default gulp tasks
+gulp.task('show-help', $.taskListing);
 
-gulp.task("gen", ["gen-webapi"]);
-gulp.task("gen-webapi", ["gen-webapi-download-swagger"], genWebapi);
-gulp.task("gen-webapi-download-swagger", genWebapiDownloadSwagger);
+gulp.task('gen', ['gen-webapi']);
+gulp.task('gen-webapi', ['gen-webapi-download-swagger'], genWebapi);
+gulp.task('gen-webapi-download-swagger', genWebapiDownloadSwagger);
 
 //--------------- generator tasks ---------------
 
 function genWebapi(done) {
-  swaggerTSGenerator.generateTSFiles(
-    config.swagger.swaggerFile,
-    config.swagger.swaggerTSGeneratorOptions
-  );
-  done();
+    swaggerTSGenerator.generateTSFiles(config.swagger.swaggerFile, config.swagger.swaggerTSGeneratorOptions);
+    done();
 }
 function genWebapiDownloadSwagger(done) {
-  process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0"; // Ignore 'UNABLE_TO_VERIFY_LEAF_SIGNATURE' authorization error
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; // Ignore 'UNABLE_TO_VERIFY_LEAF_SIGNATURE' authorization error
 
-  return request
-    .get({
-      url: config.swagger.url,
-      headers: {
-        "User-Agent": "request",
-        "content-type": "application/json"
-      }
-    })
-    .pipe(customPlumber("Error gen-webapi-autorest"))
-    .pipe(source(config.files.swaggerJson))
-    .pipe($.streamify($.jsbeautifier(/*{ mode: 'VERIFY_AND_WRITE' }*/)))
-    .pipe(gulp.dest(config.folders.swaggerFolder));
+    return request
+        .get({
+            url: config.swagger.url,
+            headers: {
+                'User-Agent': 'request',
+                'content-type': 'application/json'
+            }
+        })
+        .pipe(customPlumber('Error gen-webapi-autorest'))
+        .pipe(source(config.files.swaggerJson))
+        .pipe($.streamify($.jsbeautifier(/*{ mode: 'VERIFY_AND_WRITE' }*/)))
+        .pipe(gulp.dest(config.folders.swaggerFolder));
 }
 
 function customPlumber(errTitle) {
-  return $.plumber({
-    errorHandler: $.notify.onError({
-      // Customizing error title
-      title: errTitle || "Error running Gulp",
-      message: "Error: <%= error.message %>",
-      sound: "Glass"
-    })
-  });
+    return $.plumber({
+        errorHandler: $.notify.onError({
+            // Customizing error title
+            title: errTitle || 'Error running Gulp',
+            message: 'Error: <%= error.message %>',
+            sound: 'Glass'
+        })
+    });
 }
 
 function log(msg) {
-  $.util.log($.util.colors.yellow(msg));
+    $.util.log($.util.colors.yellow(msg));
 }
 ```
 
@@ -185,18 +182,20 @@ gulp gen
 
 ## `validators.ts`
 
-The generated validators.ts is fixed (its always generated regardless of the Swagger).
+The generated validators.ts is fixed (its always generated regardless of the Swagger unless `swaggerTSGeneratorOptions.generateValidatorFile` is set to `false`).
 It contains some extra validators to implement validation rules for the Swagger which are not part of the standard Angular validators:
 
 ```typescript
 maxValueValidator;
 minValueValidator;
+enumValidator;
 ```
 
 ## `base-model.ts`
 
-The generated base-model.ts is fixed (its always generated regardless of the Swagger).
-It contains the base class for all generated models. The next members can be used in your own software:
+The generated base-model.ts is generated regardless of the Swagger. Its contents depents on the `swaggerTSGeneratorOptions.generateFormGroups` setting.
+It contains the base class for all generated models.
+The next members are generated when `swaggerTSGeneratorOptions.generateFormGroups` is set to `true` can be used in your own software:
 
 ```typescript
     /**
@@ -250,11 +249,15 @@ export class SubTypeFactory {
 }
 ```
 
+The `useFormGroupValuesToModel` parameter is only generated if `swaggerTSGeneratorOptions.generateFormGroups` is set to `true`.
+
 ## `*.model.ts`
 
-For each definition in the Swagger an Interface and a Class are generated.
-The class contains the `$FormGroup` property to be used in the Angular FormBuilder to make a model driven form.
-The controls in the `FormGroup` contain the validators which implement the validation rules from the Swagger defnition.
+For each definition in the Swagger an Interface and a Class are generated. The contents of each class depends on the `swaggerTSGeneratorOptions.generateFormGroups` setting.
+If `swaggerTSGeneratorOptions.generateFormGroups` is set to `true`, the class contains the `$FormGroup` property to be used in the Angular FormBuilder to make a model driven form.
+The controls in the `FormGroup` contain the validators which implement the validation rules from the Swagger definition.
+
+If `swaggerTSGeneratorOptions.generateFormGroups` is set to `false`, the `validator` and `FormGroup` parts are not generated. The classes have no dependency with Angular whatsoever
 
 Properties of an enum type are generated referencing this type which are generated in the next section.
 
@@ -266,162 +269,147 @@ This is an example of a generated TypeScript file with one model (definition) fr
  * Do not edit.
  */
 /* tslint:disable */
-import {
-  Validators,
-  FormControl,
-  FormGroup,
-  FormArray,
-  ValidatorFn
-} from "@angular/forms";
-import {
-  minValueValidator,
-  maxValueValidator,
-  enumValidator
-} from "./validators";
-import { BaseModel } from "./base-model";
-import { SubTypeFactory } from "./sub-type-factory";
+import { Validators, FormControl, FormGroup, FormArray, ValidatorFn } from '@angular/forms';
+import { minValueValidator, maxValueValidator, enumValidator } from './validators';
+import { BaseModel } from './base-model';
+import { SubTypeFactory } from './sub-type-factory';
 
-import { type } from "./enums";
-import { gender } from "./enums";
-import { Address } from "./address.model";
-import { Veterinarian } from "./veterinarian.model";
-import { Tag } from "./tag.model";
-import { NullableOrEmpty } from "./nullable-or-empty.model";
+import { type } from './enums';
+import { gender } from './enums';
+import { Address } from './address.model';
+import { Veterinarian } from './veterinarian.model';
+import { Tag } from './tag.model';
+import { NullableOrEmpty } from './nullable-or-empty.model';
 
 export interface IPet {
-  name: string;
-  age?: number;
-  dob?: Date;
-  type: type;
-  gender?: gender;
-  address?: Address;
-  vet?: Veterinarian;
-  tags?: Array<Tag>;
-  isFavorate?: boolean;
-  testDate?: NullableOrEmpty<Date>;
-  primitiveArray?: Array<string>;
+    name: string;
+    age?: number;
+    dob?: Date;
+    type: type;
+    gender?: gender;
+    address?: Address;
+    vet?: Veterinarian;
+    tags?: Array<Tag>;
+    isFavorate?: boolean;
+    testDate?: NullableOrEmpty<Date>;
+    primitiveArray?: Array<string>;
 }
 
 export class Pet extends BaseModel implements IPet {
-  name: string;
-  age: number;
-  dob: Date;
-  type: type;
-  gender: gender;
-  address: Address;
-  vet: Veterinarian;
-  tags: Array<Tag>;
-  isFavorate: boolean;
-  testDate: NullableOrEmpty<Date>;
-  primitiveArray: Array<string>;
+    name: string;
+    age: number;
+    dob: Date;
+    type: type;
+    gender: gender;
+    address: Address;
+    vet: Veterinarian;
+    tags: Array<Tag>;
+    isFavorate: boolean;
+    testDate: NullableOrEmpty<Date>;
+    primitiveArray: Array<string>;
 
-  /**
-   * constructor
-   * @param values Can be used to set a webapi response or formValues to this newly constructed model
-   * @useFormGroupValuesToModel if true use formValues
-   */
-  constructor(values?: any, useFormGroupValuesToModel = false) {
-    super();
-    this.address = new Address();
-    this.vet = new Veterinarian();
-    this.tags = new Array<Tag>();
-    this.testDate = new NullableOrEmpty<Date>();
-    this.primitiveArray = new Array<string>();
-    if (values) {
-      this.setValues(values, useFormGroupValuesToModel);
+    /**
+     * constructor
+     * @param values Can be used to set a webapi response or formValues to this newly constructed model
+     * @useFormGroupValuesToModel if true use formValues
+     */
+    constructor(values?: any, useFormGroupValuesToModel = false) {
+        super();
+        this.address = new Address();
+        this.vet = new Veterinarian();
+        this.tags = new Array<Tag>();
+        this.testDate = new NullableOrEmpty<Date>();
+        this.primitiveArray = new Array<string>();
+        if (values) {
+            this.setValues(values, useFormGroupValuesToModel);
+        }
     }
-  }
 
-  /**
-   * set the values.
-   * @param values Can be used to set a webapi response to this newly constructed model
-   */
-  setValues(values: any, useFormGroupValuesToModel = false): void {
-    if (values) {
-      const rawValues = this.getValuesToUse(values, useFormGroupValuesToModel);
-      this.name = rawValues.name;
-      this.age = rawValues.age;
-      this.dob = rawValues.dob;
-      this.type = rawValues.type;
-      this.gender = rawValues.gender;
-      this.address.setValues(rawValues.address, useFormGroupValuesToModel);
-      this.vet.setValues(rawValues.vet, useFormGroupValuesToModel);
-      this.fillModelArray<Tag>(
-        this,
-        "tags",
-        rawValues.tags,
-        Tag,
-        useFormGroupValuesToModel,
-        SubTypeFactory.createSubTypeInstance,
-        Tag
-      );
-      this.isFavorate = rawValues.isFavorate;
-      this.testDate.setValues(rawValues.testDate, useFormGroupValuesToModel);
-      this.fillModelArray<string>(
-        this,
-        "primitiveArray",
-        rawValues.primitiveArray,
-        useFormGroupValuesToModel,
-        SubTypeFactory.createSubTypeInstance,
-        string
-      );
-      // set values in model properties for added formControls
-      super.setValuesInAddedPropertiesOfAttachedFormControls(
-        values,
-        useFormGroupValuesToModel
-      );
+    /**
+     * set the values.
+     * @param values Can be used to set a webapi response to this newly constructed model
+     */
+    setValues(values: any, useFormGroupValuesToModel = false): void {
+        if (values) {
+            const rawValues = this.getValuesToUse(values, useFormGroupValuesToModel);
+            this.name = rawValues.name;
+            this.age = rawValues.age;
+            this.dob = rawValues.dob;
+            this.type = rawValues.type;
+            this.gender = rawValues.gender;
+            this.address.setValues(rawValues.address, useFormGroupValuesToModel);
+            this.vet.setValues(rawValues.vet, useFormGroupValuesToModel);
+            this.fillModelArray<Tag>(
+                this,
+                'tags',
+                rawValues.tags,
+                Tag,
+                useFormGroupValuesToModel,
+                SubTypeFactory.createSubTypeInstance,
+                Tag
+            );
+            this.isFavorate = rawValues.isFavorate;
+            this.testDate.setValues(rawValues.testDate, useFormGroupValuesToModel);
+            this.fillModelArray<string>(
+                this,
+                'primitiveArray',
+                rawValues.primitiveArray,
+                useFormGroupValuesToModel,
+                SubTypeFactory.createSubTypeInstance,
+                string
+            );
+            // set values in model properties for added formControls
+            super.setValuesInAddedPropertiesOfAttachedFormControls(values, useFormGroupValuesToModel);
+        }
     }
-  }
 
-  protected getFormGroup(): FormGroup {
-    if (!this._formGroup) {
-      this._formGroup = new FormGroup({
-        name: new FormControl(this.name, [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.pattern("^[a-zA-Z0-9- ]+$")
-        ]),
-        age: new FormControl(this.age),
-        dob: new FormControl(this.dob),
-        type: new FormControl(this.type, [Validators.required]),
-        gender: new FormControl(this.gender),
-        address: this.address.$formGroup,
-        vet: this.vet.$formGroup,
-        tags: new FormArray([]),
-        isFavorate: new FormControl(this.isFavorate),
-        testDate: this.testDate.$formGroup,
-        primitiveArray: new FormArray([])
-      });
+    protected getFormGroup(): FormGroup {
+        if (!this._formGroup) {
+            this._formGroup = new FormGroup({
+                name: new FormControl(this.name, [
+                    Validators.required,
+                    Validators.minLength(4),
+                    Validators.pattern('^[a-zA-Z0-9- ]+$')
+                ]),
+                age: new FormControl(this.age),
+                dob: new FormControl(this.dob),
+                type: new FormControl(this.type, [Validators.required]),
+                gender: new FormControl(this.gender),
+                address: this.address.$formGroup,
+                vet: this.vet.$formGroup,
+                tags: new FormArray([]),
+                isFavorate: new FormControl(this.isFavorate),
+                testDate: this.testDate.$formGroup,
+                primitiveArray: new FormArray([])
+            });
 
-      // generate FormArray control elements
-      this.fillFormArray<Tag>("tags", this.tags, Tag);
-      this.fillFormArray<string>("primitiveArray", this.primitiveArray);
+            // generate FormArray control elements
+            this.fillFormArray<Tag>('tags', this.tags, Tag);
+            this.fillFormArray<string>('primitiveArray', this.primitiveArray);
+        }
+        return this._formGroup;
     }
-    return this._formGroup;
-  }
 
-  /**
-   * set the FormGroup values to the model values.
-   */
-  setFormGroupValues() {
-    this.$formGroup.controls["name"].setValue(this.name);
-    this.$formGroup.controls["age"].setValue(this.age);
-    this.$formGroup.controls["dob"].setValue(this.dob);
-    this.$formGroup.controls["type"].setValue(this.type);
-    this.$formGroup.controls["type"].setValue(this.type);
-    this.$formGroup.controls["gender"].setValue(this.gender);
-    this.address.setFormGroupValues();
-    this.vet.setFormGroupValues();
-    this.fillFormArray<Tag>("tags", this.tags, Tag);
-    this.$formGroup.controls["isFavorate"].setValue(this.isFavorate);
-    this.testDate.setFormGroupValues();
-    this.fillFormArray<string>("primitiveArray", this.primitiveArray, string);
-    this.$formGroup.controls["minimumPremiumPercentage"].setValue(
-      this.minimumPremiumPercentage
-    );
-    // set formValues in added formControls
-    super.setFormGroupValuesInAddedFormControls();
-  }
+    /**
+     * set the FormGroup values to the model values.
+     */
+    setFormGroupValues() {
+        this.$formGroup.controls['name'].setValue(this.name);
+        this.$formGroup.controls['age'].setValue(this.age);
+        this.$formGroup.controls['dob'].setValue(this.dob);
+        this.$formGroup.controls['type'].setValue(this.type);
+        this.$formGroup.controls['type'].setValue(this.type);
+        this.$formGroup.controls['gender'].setValue(this.gender);
+        this.address.setFormGroupValues();
+        this.vet.setFormGroupValues();
+        this.fillFormArray<Tag>('tags', this.tags, Tag);
+        this.$formGroup.controls['isFavorate'].setValue(this.isFavorate);
+        this.testDate.setFormGroupValues();
+        this.fillFormArray<string>('primitiveArray', this.primitiveArray, string);
+        this.$formGroup.controls['minimumPremiumPercentage'].setValue(this.minimumPremiumPercentage);
+        // set formValues in added formControls
+        super.setFormGroupValuesInAddedFormControls();
+    }
 }
 ```
 
@@ -431,62 +419,70 @@ For custom models you can use the following data in your HBS template
 
 ```typescript
 interface TemplateData {
-  generateClasses: boolean;
-  hasComplexType: boolean;
-  validatorFileName: string;
-  baseModelFileName: string;
-  moduleName: string;
-  enumModuleName: string;
-  enumRef: string;
-  subTypePropertyName: string;
-  type: Type;
+    generateClasses: boolean;
+    generateFormGroups: boolean;
+    hasComplexType: boolean;
+    validatorFileName: string;
+    baseModelFileName: string;
+    subTypeFactoryFileName: string;
+    moduleName: string;
+    enumModuleName: string;
+    enumRef: string;
+    subTypePropertyName: string;
+    subTypePropertyConstantName: string;
+    type: Type;
 }
 
 // Where Type is the following interface
 interface Type {
-  fileName: string;
-  typeName: string;
-  namespace: string;
-  fullNamespace: string;
-  fullTypeName: string;
-  isSubType: boolean;
-  baseType: Type;
-  baseImportFile: string;
-  path: string;
-  pathToRoot: string;
-  properties: TypeProperty[];
+    fileName: string;
+    typeName: string;
+    namespace: string;
+    fullNamespace: string;
+    fullTypeName: string;
+    importFile: string;
+    isSubType: boolean;
+    hasSubTypeProperty: boolean;
+    isBaseType: boolean;
+    baseType: Type;
+    baseImportFile: string;
+    path: string;
+    pathToRoot: string;
+    properties: TypeProperty[];
 }
 
 interface TypeProperty {
-  name: string;
-  typeName: string;
-  namespace: string;
-  description: string;
-  hasValidation: boolean;
-  isComplexType: boolean;
-  isImportType: boolean;
-  isUniqueImportType: boolean;
-  importType: string;
-  importFile: string;
-  isEnum: boolean;
-  isUniqueImportEnumType: boolean;
-  importEnumType: string;
-  isArray: boolean;
-  isArrayComplexType: boolean;
-  arrayTypeName: string;
-  validators: {
-    validation: {
-      required: boolean;
-      minimum: number;
-      maximum: number;
-      enum: string;
-      minLength: number;
-      maxLength: number;
-      pattern: string;
+    name: string;
+    staticFieldName: string;
+    type: Type;
+    typeName: string;
+    namespace: string;
+    description: string;
+    hasValidation: boolean;
+    isComplexType: boolean;
+    isImportType: boolean;
+    isUniqueImportType: boolean;
+    importType: string;
+    importFile: string;
+    isEnum: boolean;
+    isUniqueImportEnumType: boolean;
+    importEnumType: string;
+    isArray: boolean;
+    isArrayComplexType: boolean;
+    arrayTypeName: string;
+    validators: {
+        validation: {
+            required: boolean;
+            minimum: number;
+            maximum: number;
+            enum: string;
+            minLength: number;
+            maxLength: number;
+            pattern: string;
+        };
+        validatorArray: string[];
     };
-    validatorArray: string[];
-  };
-  enum: string[];
+    enum: string[];
 }
 ```
 
@@ -501,25 +497,25 @@ This is een excerpt from a generated TypeScript file with enums.
 // generate enum based on strings instead of numbers
 // (see https://blog.rsuter.com/how-to-implement-an-enum-with-string-values-in-typescript/)
 export enum type {
-  cat = <any>"cat",
-  dog = <any>"dog",
-  bird = <any>"bird",
-  whale = <any>"whale"
+    cat = <any>'cat',
+    dog = <any>'dog',
+    bird = <any>'bird',
+    whale = <any>'whale'
 }
 
 export enum gender {
-  unknown = <any>"unknown",
-  male = <any>"male",
-  female = <any>"female"
+    unknown = <any>'unknown',
+    male = <any>'male',
+    female = <any>'female'
 }
 
 export enum hairColor {
-  red = <any>"red",
-  blond = <any>"blond",
-  brown = <any>"brown",
-  black = <any>"black",
-  white = <any>"white",
-  gray = <any>"gray"
+    red = <any>'red',
+    blond = <any>'blond',
+    brown = <any>'brown',
+    black = <any>'black',
+    white = <any>'white',
+    gray = <any>'gray'
 }
 
 /**
@@ -539,33 +535,27 @@ export enum hairColor {
  *   }
  */
 export class AllEnums {
-  private static _instance: AllEnums = new AllEnums();
-  constructor() {
-    if (AllEnums._instance) {
-      throw new Error(
-        "Error: Instantiation failed: Use AllEnums.instance instead of new"
-      );
+    private static _instance: AllEnums = new AllEnums();
+    constructor() {
+        if (AllEnums._instance) {
+            throw new Error('Error: Instantiation failed: Use AllEnums.instance instead of new');
+        }
+        AllEnums._instance = this;
     }
-    AllEnums._instance = this;
-  }
-  static get instance(): AllEnums {
-    return AllEnums._instance;
-  }
+    static get instance(): AllEnums {
+        return AllEnums._instance;
+    }
 
-  type = type;
-  gender = gender;
-  hairColor = hairColor;
+    type = type;
+    gender = gender;
+    hairColor = hairColor;
 }
 
 /**
-* union type of all enums.
-* Useful for typing params and variables in generic components.
-*/
-export type AllEnumsType =
-    | type
-    | gender
-    | haircolor
-    ;
+ * union type of all enums.
+ * Useful for typing params and variables in generic components.
+ */
+export type AllEnumsType = type | gender | haircolor;
 ```
 
 Normally enums are numbers based in TypeScript. In out Webapi's whe use stringbased Enums.

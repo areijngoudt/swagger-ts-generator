@@ -68,6 +68,7 @@ function enrichConfig(options: GeneratorOptions) {
   return {
     generateBarrelFiles: true,
     generateClasses: true,
+    generateFormGroups: true,
     generateValidatorFile: true,
     baseModelFileName: "base-model.ts",
     validatorsFileName: "validators.ts",
