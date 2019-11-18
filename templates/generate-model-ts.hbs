@@ -84,7 +84,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
             const rawValues = {{#if ../generateFormGroups}}this.getValuesToUse(values, useFormGroupValuesToModel);{{else}}values{{/if}}
 {{#properties}}
     {{#if isArray}}
-            this.fillModelArray<{{arrayTypeName}}>(this, {{../fullTypeName}}.{{staticFieldName}}, rawValues.{{name}}{{#if ../generateFormGroups}}, useFormGroupValuesToModel{{/if}}{{#if isArrayComplexType}}, {{arrayTypeName}}, SubTypeFactory.createSubTypeInstance{{/if}});
+            this.fillModelArray<{{arrayTypeName}}>(this, {{../fullTypeName}}.{{staticFieldName}}, rawValues.{{name}}{{#if ../../generateFormGroups}}, useFormGroupValuesToModel{{/if}}{{#if isArrayComplexType}}, {{arrayTypeName}}, SubTypeFactory.createSubTypeInstance{{/if}});
     {{else}}
         {{#if isComplexType}}
             {{#if type.isBaseType}}
@@ -93,7 +93,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
                 this.{{name}} = SubTypeFactory.createSubTypeInstance(rawValues.{{name}}) as {{typeName}};
             }
             {{/if}}
-            this.{{name}}.setValues(rawValues.{{name}}{{#if ../generateFormGroups}}, useFormGroupValuesToModel{{/if}});
+            this.{{name}}.setValues(rawValues.{{name}}{{#if ../../generateFormGroups}}, useFormGroupValuesToModel{{/if}});
         {{else}}
             this.{{name}} = this.getValue<{{typeName}}>(rawValues, {{../fullTypeName}}.{{staticFieldName}});
         {{/if}}

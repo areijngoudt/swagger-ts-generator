@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.2.3
+
+-   fixed an error in model generation using the FormGroups
+
 ### 1.2.2
 
 -   added some unit tests to test generated code
