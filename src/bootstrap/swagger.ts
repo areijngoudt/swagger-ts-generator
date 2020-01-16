@@ -1,4 +1,9 @@
-type Consumers = 'application/json' | 'text/json' | 'application/xml' | 'text/xml' | 'application/x-www-form-urlencoded';
+type Consumers =
+    | 'application/json'
+    | 'text/json'
+    | 'application/xml'
+    | 'text/xml'
+    | 'application/x-www-form-urlencoded';
 type Producers = 'application/json' | 'text/json' | 'application/xml' | 'text/xml';
 
 interface Schema {
@@ -30,7 +35,7 @@ export interface Swagger {
             post: SwaggerHttpEndpoint;
             put: SwaggerHttpEndpoint;
             delete: SwaggerHttpEndpoint;
-        }
+        };
     };
     definitions: SwaggerDefinitions;
 }
@@ -55,8 +60,8 @@ export interface SwaggerHttpEndpoint {
         [httpStatusCode: string]: {
             description: string;
             schema: Schema;
-        }
-    }
+        };
+    };
     deprecated: boolean;
 }
 
@@ -79,4 +84,7 @@ export interface SwaggerPropertyDefinition extends Schema {
     items?: SwaggerDefinition;
     readonly?: boolean;
     enum?: string[];
+    anyOf?: SwaggerDefinition[];
+    oneOf?: SwaggerDefinition[];
+    allOf?: SwaggerDefinition[];
 }

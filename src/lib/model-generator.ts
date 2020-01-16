@@ -530,6 +530,20 @@ function getPropertyType(item: SwaggerPropertyDefinition, name: string, options:
 
         return result;
     }
+    if (item.anyOf || item.oneOf) {
+        let combinedType = item.anyOf || item.oneOf;
+        if (!combinedType) return;
+        for (let propertyType of combinedType) {
+            let propType = getPropertyType(propertyType, name, options, isEnum);
+            if (!result.typeName.includes(propType.typeName)) {
+                if (result.typeName !== '') {
+                    result.typeName += ' | ';
+                }
+                result.typeName += propType.typeName;
+            }
+        }
+        return result;
+    }
 }
 
 function removeDefinitionsRef(value: string) {
