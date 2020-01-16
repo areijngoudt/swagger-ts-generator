@@ -14,7 +14,7 @@ import { SubTypeFactory } from '{{type.pathToRoot}}{{subTypeFactoryFileName}}';
 
 {{#with type}}
     {{#if isSubType}}
-import { I{{baseType.typeName}}, {{baseType.typeName}} } from '{{baseImportFile}}';
+import { {{baseType.typeName}} } from '{{baseImportFile}}';
     {{/if}}
 {{#properties}}
     {{#if isUniqueImportType}}
@@ -28,7 +28,7 @@ import { {{importEnumType}} } from '{{../../enumRef}}';
 {{#if ../generateClasses}}
 export interface I{{{typeName}}} {
 {{else}}
-export interface {{{typeName}}} {
+export interface {{{typeName}}} {{#if hasSubTypeProperty}}extends {{{baseType.typeName}}}{{/if}} {
 {{/if}}
 {{#properties}}
     {{name}}{{#unless validators.validation.required}}?{{/unless}}: {{{typeName}}};
