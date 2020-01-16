@@ -3,12 +3,10 @@
         "target": "es6",
         "module": "commonjs",
         "outDir": "./",
-        "sourceMap": false,
+        "sourceMap": true,
         "declaration": true,
-        // "typeRoots": []
-        "types": ["jest"]
+        "types": ["jest", "node"]
     },
-    "files": ["./node_modules/@types/node/index.d.ts"],
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]
 }
