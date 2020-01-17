@@ -63,6 +63,7 @@ interface TypeProperty {
     staticFieldName: string;
     type: Type;
     typeName: string;
+    interfaceTypeName: string;
     namespace: string;
     description: string;
     hasValidation: boolean;
@@ -77,6 +78,7 @@ interface TypeProperty {
     isArray: boolean;
     isArrayComplexType: boolean;
     arrayTypeName: string;
+    arrayInterfaceTypeName: string;
     validators: {
         validation: {
             required: boolean;
@@ -112,7 +114,7 @@ export function generateModelTSFiles(swagger: Swagger, options: GeneratorOptions
     generateTSBaseModel(folder, options);
     // get type definitions from swagger
     let typeCollection = getTypeDefinitions(swagger, options, MODEL_SUFFIX, MODEL_FILE_SUFFIX);
-    // console.log('typeCollection', util.inspect(typeCollection, false, null, true))
+    // console.log('typeCollection', util.inspect(typeCollection, false, null, true));
 
     // group types per namespace
     let namespaceGroups = getNamespaceGroups(typeCollection, options);
@@ -378,6 +380,7 @@ function getTypePropertyDefinition(
         staticFieldName: staticFieldName,
         type: null, // filled elsewhere
         typeName: propertyType.typeName,
+        interfaceTypeName: propertyType.interfaceTypeName,
         namespace: propertyType.namespace,
         description: item.description,
         hasValidation: hasValidation,
@@ -392,6 +395,7 @@ function getTypePropertyDefinition(
         isArray: isArray,
         isArrayComplexType: propertyType.isArrayComplexType,
         arrayTypeName: propertyType.arrayTypeName,
+        arrayInterfaceTypeName: propertyType.arrayInterfaceTypeName,
         validators: validators,
         enum: item.enum
     };
@@ -476,10 +480,12 @@ function getTypeNameWithoutNamespacePrefixesToRemove(key: string, options: Gener
 function getPropertyType(item: SwaggerPropertyDefinition, name: string, options: GeneratorOptions, isEnum: boolean) {
     let result = {
         typeName: '',
+        interfaceTypeName: '',
         namespace: '',
         fullNamespace: undefined,
         isArrayComplexType: false,
-        arrayTypeName: undefined
+        arrayTypeName: undefined,
+        arrayInterfaceTypeName: undefined
     };
     if (item.type) {
         result.typeName = item.type;
@@ -495,12 +501,15 @@ function getPropertyType(item: SwaggerPropertyDefinition, name: string, options:
         if (item.type == 'string' && item.enum) {
             result.typeName = `${name}`;
         }
+        result.interfaceTypeName = result.typeName;
         if (item.type == 'array' && item.items) {
             let arrayPropType = getPropertyType(item.items, name, options, isEnum);
             result.typeName = `Array<${arrayPropType.typeName}>`;
+            result.interfaceTypeName = `Array<${arrayPropType.interfaceTypeName}>`;
             result.namespace = arrayPropType.namespace;
             result.isArrayComplexType = !isEnum ? !!item.items.$ref : false;
             result.arrayTypeName = arrayPropType.typeName;
+            result.arrayInterfaceTypeName = arrayPropType.interfaceTypeName;
         }
         // description may contain an overrule type for enums, eg /** type CoverType */
         if (hasTypeFromDescription(item.description)) {
@@ -527,6 +536,7 @@ function getPropertyType(item: SwaggerPropertyDefinition, name: string, options:
                 result.typeName = result.typeName.replace(genericTType, 'Date');
             }
         }
+        result.interfaceTypeName = isEnum ? result.typeName : `I${result.typeName}`;
 
         return result;
     }

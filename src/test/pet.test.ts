@@ -28,7 +28,7 @@ describe('Pet', () => {
     it('setValues ignores unknown properties', () => {
         const pet = new Pet(values);
 
-        pet.setValues({ hopla: 'Poesje' });
+        pet.setValues(<any>{ hopla: 'Poesje' });
         expect(pet['hopla']).toBeUndefined();
         expect(pet.id).toBe('123');
     });

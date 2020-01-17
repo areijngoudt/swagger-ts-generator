@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 1.2.7
+
+-   in model interface: use interface for properties of complex types
+-   in model: use Partial<interface> instead of any in ctor and setValues
+
 ### 1.2.3
 
 -   fixed an error in model generation using the FormGroups

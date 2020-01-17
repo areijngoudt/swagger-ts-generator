@@ -18,7 +18,7 @@ import { I{{baseType.typeName}}, {{baseType.typeName}} } from '{{baseImportFile}
     {{/if}}
 {{#properties}}
     {{#if isUniqueImportType}}
-import { {{importType}} } from '{{importFile}}';
+import { I{{importType}}, {{importType}} } from '{{importFile}}';
     {{/if}}
     {{#if isUniqueImportEnumType}}
 import { {{importEnumType}} } from '{{../../enumRef}}';
@@ -31,7 +31,7 @@ export interface I{{{typeName}}} {
 export interface {{{typeName}}} {
 {{/if}}
 {{#properties}}
-    {{name}}{{#unless validators.validation.required}}?{{/unless}}: {{{typeName}}};
+    {{name}}{{#unless validators.validation.required}}?{{/unless}}: {{{interfaceTypeName}}};
 {{/properties}}
 }
 
@@ -58,7 +58,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
      * @param values Can be used to set a webapi response or formValues to this newly constructed model
     {{#if ../generateFormGroups}}* @useFormGroupValuesToModel if true use formValues{{/if}}
     */
-    constructor(values?: any{{#if ../generateFormGroups}}, useFormGroupValuesToModel = false{{/if}}) {
+    constructor(values?: Partial<I{{{typeName}}}>{{#if ../generateFormGroups}}, useFormGroupValuesToModel = false{{/if}}) {
         super();
 {{#if hasSubTypeProperty}}
 
@@ -79,12 +79,12 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
      * set the values.
      * @param values Can be used to set a webapi response to this newly constructed model
     */
-    setValues(values: any{{#if ../generateFormGroups}}, useFormGroupValuesToModel = false{{/if}}): void {
+    setValues(values: Partial<I{{{typeName}}}>{{#if ../generateFormGroups}}, useFormGroupValuesToModel = false{{/if}}): void {
         if (values) {
             const rawValues = {{#if ../generateFormGroups}}this.getValuesToUse(values, useFormGroupValuesToModel);{{else}}values{{/if}}
 {{#properties}}
     {{#if isArray}}
-            this.fillModelArray<{{arrayTypeName}}>(this, {{../fullTypeName}}.{{staticFieldName}}, rawValues.{{name}}{{#if ../../generateFormGroups}}, useFormGroupValuesToModel{{/if}}{{#if isArrayComplexType}}, {{arrayTypeName}}, SubTypeFactory.createSubTypeInstance{{/if}});
+            this.fillModelArray<{{arrayInterfaceTypeName}}>(this, {{../fullTypeName}}.{{staticFieldName}}, rawValues.{{name}}{{#if ../../generateFormGroups}}, useFormGroupValuesToModel{{/if}}{{#if isArrayComplexType}}, {{arrayTypeName}}, SubTypeFactory.createSubTypeInstance{{/if}});
     {{else}}
         {{#if isComplexType}}
             {{#if type.isBaseType}}
