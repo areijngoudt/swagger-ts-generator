@@ -15,7 +15,9 @@ import {
     endsWith,
     find,
     each,
-    uniqBy
+    uniqBy,
+    uniq,
+    isNil
 } from 'lodash';
 
 import {
@@ -31,7 +33,8 @@ import {
     getTypeFromDescription,
     getDirectories,
     removeFolder,
-    removeExtension
+    removeExtension,
+    logError
 } from './utils';
 import { GeneratorOptions } from '../bootstrap/options';
 import {
@@ -40,6 +43,8 @@ import {
     SwaggerPropertyDefinition,
     SwaggerDefinitionProperties
 } from '../bootstrap/swagger';
+import { prototype } from 'stream';
+import { strict } from 'assert';
 
 interface Type {
     fileName: string;
@@ -231,7 +236,7 @@ function getTypeDefinition(
     let isSubType = getIsSubType(item);
     let hasSubTypeProperty = isSubType || getHasSubTypeProperty(properties, options);
     if (isSubType) {
-        baseType = getBaseType(typeName, typeCollection, item, options);
+        baseType = getBaseType(typeName, typeCollection, item, options, false);
         // baseType might not be in the typeCollection yet
         // in that case, a second pass will be done with method fillMissingBaseTypes
         if (baseType) {
@@ -279,11 +284,14 @@ function fillMissingBaseTypes(
             let namespace = getNamespace(key, options, true);
             let pathToRoot = getPathToRoot(namespace);
 
-            let baseType = getBaseType(key, typeCollection, item, options);
-            // set that the baseType is a baseType
-            baseType.isBaseType = true;
-            // determine baseImportFile
-            let baseImportFile = getImportFile(baseType.typeName, baseType.namespace, pathToRoot, suffix);
+            let baseType = getBaseType(key, typeCollection, item, options, true);
+            let baseImportFile;
+            if (baseType) {
+                // set that the baseType is a baseType
+                baseType.isBaseType = true;
+                // determine baseImportFile
+                baseImportFile = getImportFile(baseType.typeName, baseType.namespace, pathToRoot, suffix);
+            }
             let required = getSubTypeRequired(item);
             let properties = getSubTypeProperties(item, baseType);
 
@@ -301,12 +309,30 @@ function fillPropertyTypes(
     suffix: string,
     fileSuffix: string
 ) {
+    const missingTypes = new Array<string>();
     forEach(typeCollection, (type, typeKey) => {
         forEach(type.properties, (property, propertyKey) => {
             const propertyType = findTypeInTypeCollection(typeCollection, property.typeName);
             property.type = propertyType;
+            if (isNil(propertyType) && !property.isEnum && property.isComplexType) {
+                let isMissingType = true;
+                let missingTypeName = property.typeName;
+                if (property.isArrayComplexType) {
+                    isMissingType = isNil(findTypeInTypeCollection(typeCollection, property.arrayTypeName));
+                    missingTypeName = property.arrayTypeName;
+                } else if (property.isArray) {
+                    isMissingType = false;
+                }
+                if (isMissingType) {
+                    missingTypes.push(missingTypeName);
+                    // console.error(property);
+                }
+            }
         });
     });
+    for (const missingType of uniq(missingTypes)) {
+        logError(`type ${missingType} not found`);
+    }
 }
 
 function fillTypeProperties(
@@ -628,10 +654,11 @@ function getHasSubTypeProperty(properties: SwaggerDefinitionProperties, options:
 }
 
 function getBaseType(
-    superTypeName: string,
+    subTypeName: string,
     typeCollection: Type[],
     item: SwaggerDefinition,
-    options: GeneratorOptions
+    options: GeneratorOptions,
+    logErrorForMissingBaseType: boolean
 ) {
     // TODO how about more than one baseType?
     let type = removeDefinitionsRef(item.allOf[0].$ref);
@@ -640,6 +667,9 @@ function getBaseType(
     let baseType = findTypeInTypeCollection(typeCollection, typeName);
     // console.log('---------------------')
     // console.log('getBaseType superTypeName', superTypeName, 'type', type, /*'item', item,*/ 'typeName', typeName, 'baseType', baseType ? baseType.typeName : null, /*'typeCollection', typeCollection*/ )
+    if (!baseType && logErrorForMissingBaseType) {
+        logError(`baseType ${typeName} of ${subTypeName} not found`);
+    }
     return baseType;
 }
 

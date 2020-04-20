@@ -2,6 +2,7 @@ node_modules
 NULL.log
 .DS_Store
 .npm-debug.log
+report.*.json
 
 /test-gen/*
 

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.2.10
+
+-   log missing types
+
 ### 1.2.7
 
 -   in model interface: use interface for properties of complex types

@@ -1,7 +1,18 @@
-import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSync, lstatSync, unlinkSync, rmdirSync } from 'fs';
+import {
+    readFileSync,
+    writeFileSync,
+    existsSync,
+    mkdirSync,
+    readdirSync,
+    statSync,
+    lstatSync,
+    unlinkSync,
+    rmdirSync
+} from 'fs';
 import { dirname, join } from 'path';
 import { compile } from 'handlebars';
 import * as moment from 'moment';
+import * as chalk from 'chalk';
 import { kebabCase, find, sortBy, toPairs, fromPairs } from 'lodash';
 import { SwaggerDefinition } from '../bootstrap/swagger';
 import { GeneratorOptions } from '../bootstrap/options';
@@ -49,7 +60,7 @@ export function ensureFolder(folder: string) {
 }
 
 export function getDirectories(srcpath: string) {
-    return readdirSync(srcpath).filter((file) => {
+    return readdirSync(srcpath).filter(file => {
         return statSync(join(srcpath, file)).isDirectory();
     });
 }
@@ -57,10 +68,12 @@ export function getDirectories(srcpath: string) {
 export function removeFolder(folder: string) {
     if (existsSync(folder)) {
         readdirSync(folder).forEach((file, index) => {
-            let curPath = folder + "/" + file;
-            if (lstatSync(curPath).isDirectory()) { // recurse
+            let curPath = folder + '/' + file;
+            if (lstatSync(curPath).isDirectory()) {
+                // recurse
                 removeFolder(curPath);
-            } else { // delete file
+            } else {
+                // delete file
                 unlinkSync(curPath);
             }
         });
@@ -99,7 +112,7 @@ export function getTypeFromDescription(description: string) {
 }
 export function hasTypeFromDescription(description: string) {
     if (description) {
-        return (description.startsWith('ts-type') || description.startsWith('type'));
+        return description.startsWith('ts-type') || description.startsWith('type');
     }
     return false;
 }
@@ -112,7 +125,9 @@ export function getSortedObjectProperties(object: Object) {
 
 export function isInTypesToFilter(item: SwaggerDefinition, key: string, options: GeneratorOptions) {
     if (options && options.typesToFilter) {
-        const result = !!find(options.typesToFilter, element => { return element === key; });
+        const result = !!find(options.typesToFilter, element => {
+            return element === key;
+        });
         // if (result) {
         //     console.log('item in typesToFilter', key, result);
         // }
@@ -128,4 +143,9 @@ export function removeExtension(file: string) {
 export function log(message: string) {
     let time = moment().format('HH:mm:SS');
     console.log(`[${time}] ${message}`);
+}
+
+export function logError(message: string) {
+    let time = moment().format('HH:mm:SS');
+    console.error(`[${time}]`, chalk.red(`*** ERROR *** ${message}`));
 }
