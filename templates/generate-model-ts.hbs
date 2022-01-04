@@ -4,10 +4,6 @@
 */
 /* tslint:disable */
 {{#if generateClasses}}
-{{#if generateFormGroups}}
-import { Validators, FormControl, FormGroup, FormArray, ValidatorFn } from '@angular/forms';
-import { minValueValidator, maxValueValidator, enumValidator } from '{{type.pathToRoot}}{{validatorFileName}}';
-{{/if}}
 import { BaseModel } from '{{type.pathToRoot}}{{baseModelFileName}}';
 import { SubTypeFactory } from '{{type.pathToRoot}}{{subTypeFactoryFileName}}';
 {{/if}}
@@ -16,17 +12,15 @@ import { SubTypeFactory } from '{{type.pathToRoot}}{{subTypeFactoryFileName}}';
     {{#if isSubType}}
 import { I{{baseType.typeName}}, {{baseType.typeName}} } from '{{baseImportFile}}';
     {{/if}}
-{{#properties}}
-    {{#if isUniqueImportType}}
+{{#templateImportTypes}}
 import { I{{importType}}, {{importType}} } from '{{importFile}}';
-    {{/if}}
-    {{#if isUniqueImportEnumType}}
+{{/templateImportTypes}}
+{{#templateImportEnumTypes}}
 import { {{importEnumType}} } from '{{../../enumRef}}';
-    {{/if}}
-{{/properties}}
+{{/templateImportEnumTypes}}
 
 {{#if ../generateClasses}}
-export interface I{{{typeName}}} {
+export interface I{{{typeName}}} {{#if isSubType}}extends I{{{baseType.typeName}}}{{/if}}{
 {{else}}
 export interface {{{typeName}}} {
 {{/if}}
@@ -56,9 +50,8 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
     /**
      * constructor
      * @param values Can be used to set a webapi response or formValues to this newly constructed model
-    {{#if ../generateFormGroups}}* @useFormGroupValuesToModel if true use formValues{{/if}}
     */
-    constructor(values?: Partial<I{{{typeName}}}>{{#if ../generateFormGroups}}, useFormGroupValuesToModel = false{{/if}}) {
+    constructor(values?: Partial<I{{{typeName}}}>) {
         super();
 {{#if hasSubTypeProperty}}
 
@@ -66,12 +59,12 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
 {{/if}}
 {{#properties}}
     {{#if isComplexType}}
-        this.{{name}} = new {{{typeName}}}(); {{#if type.isBaseType}}// baseTypes should not be instantiated{{/if}}
+        this.{{name}} = new {{{templateTypeNameForInstantiation}}}(); {{#if type.isBaseType}}// baseTypes should not be instantiated{{/if}}
     {{/if}}
 {{/properties}}
 
         if (values) {
-            this.setValues(values{{#if ../generateFormGroups}}, useFormGroupValuesToModel{{/if}});
+            this.setValues(values);
         }
     }
 
@@ -79,76 +72,28 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
      * set the values.
      * @param values Can be used to set a webapi response to this newly constructed model
     */
-    setValues(values: Partial<I{{{typeName}}}>{{#if ../generateFormGroups}}, useFormGroupValuesToModel = false{{/if}}): void {
+    setValues(values: Partial<I{{{typeName}}}>): void {
         if (values) {
-            const rawValues = {{#if ../generateFormGroups}}this.getValuesToUse(values, useFormGroupValuesToModel);{{else}}values{{/if}}
+            const rawValues = values
 {{#properties}}
     {{#if isArray}}
-            this.fillModelArray<{{arrayInterfaceTypeName}}>(this, {{../fullTypeName}}.{{staticFieldName}}, rawValues.{{name}}{{#if ../../generateFormGroups}}, useFormGroupValuesToModel{{/if}}{{#if isArrayComplexType}}, {{arrayTypeName}}, SubTypeFactory.createSubTypeInstance{{/if}});
+            this.fillModelArray<{{arrayInterfaceTypeName}}>(this, {{../fullTypeName}}.{{staticFieldName}}, rawValues.{{name}}{{#if isArrayComplexType}}, {{templateTypeNameForComplexArray}}, SubTypeFactory.createSubTypeInstance{{/if}});
     {{else}}
         {{#if isComplexType}}
-            {{#if type.isBaseType}}
+            {{#if templateUseInstantiateSubType}}
             if (rawValues.{{name}} && rawValues.{{name}}.{{{../../subTypePropertyName}}} &&
                 this.{{name}}.{{{../../subTypePropertyName}}} !== rawValues.{{name}}.{{{../../subTypePropertyName}}}) {
                 this.{{name}} = SubTypeFactory.createSubTypeInstance(rawValues.{{name}}) as {{typeName}};
             }
             {{/if}}
-            this.{{name}}.setValues(rawValues.{{name}}{{#if ../../generateFormGroups}}, useFormGroupValuesToModel{{/if}});
+            this.{{name}}.setValues(rawValues.{{name}});
         {{else}}
             this.{{name}} = this.getValue<{{typeName}}>(rawValues, {{../fullTypeName}}.{{staticFieldName}});
         {{/if}}
     {{/if}}
 {{/properties}}
-            {{#if ../generateFormGroups}}
-            // set values in model properties for added formControls
-            super.setValuesInAddedPropertiesOfAttachedFormControls(values, useFormGroupValuesToModel);
-            {{/if}}
         }
     }
-
-{{#if ../generateFormGroups}}
-    protected getFormGroup(): FormGroup {
-        if (!this._formGroup) {
-            this._formGroup = new FormGroup({
-{{#properties}}
-{{#if isArray}}
-                {{name}}: new FormArray([]),
-{{else if isImportType}}
-                {{name}}: this.{{name}}.$formGroup,
-{{else if hasValidation}}
-                {{name}}: new FormControl(this.{{name}}, [{{#each validators.validatorArray}}{{{this}}}, {{/each}}]),
-{{else}}
-                {{name}}: new FormControl(this.{{name}}),
-{{/if}}
-{{/properties}}
-            });
-{{#properties}}
-{{#if isArray}}
-            // generate FormArray control elements
-            this.fillFormArray<{{arrayTypeName}}>({{../fullTypeName}}.{{staticFieldName}}, this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
-{{/if}}
-{{/properties}}
-        }
-        return this._formGroup;
-    }
-
-    /**
-     * set the FormGroup values to the model values.
-    */
-    setFormGroupValues() {
-{{#properties}}
-{{#if isArray}}
-        this.fillFormArray<{{arrayTypeName}}>({{../fullTypeName}}.{{staticFieldName}}, this.{{name}}{{#if isArrayComplexType}}, {{arrayTypeName}}{{/if}});
-{{else if isImportType}}
-        this.{{name}}.setFormGroupValues();
-{{else}}
-        this.$formGroup.controls[{{../fullTypeName}}.{{staticFieldName}}].setValue(this.{{name}});
-{{/if}}
-{{/properties}}
-        // set formValues in added formControls
-        super.setFormGroupValuesInAddedFormControls();
-    }
-{{/if}}
 }
 {{/if}}
 {{/with}}

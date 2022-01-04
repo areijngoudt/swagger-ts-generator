@@ -13,7 +13,7 @@ describe('Pet', () => {
         [Pet.PHOTO_URLS_FIELD_NAME]:
             'https://i0.wp.com/katzenworld.co.uk/wp-content/uploads/2017/12/cat-crying-1.jpg?resize=610%2C415&ssl=1',
         [Pet.TAGS_FIELD_NAME]: [],
-        [Pet.STATUS_FIELD_NAME]: status.available
+        [Pet.STATUS_FIELD_NAME]: status.approved
     };
 
     it('setValues keeps original values intact', () => {

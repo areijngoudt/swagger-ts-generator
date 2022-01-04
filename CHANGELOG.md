@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### 2.0.0
+
+-   support openapi v3 (instead of swagger v2)
+-   removed generateBarrelFile
+-   removed generateFormGroups
+
 ### 1.2.10
 
 -   log missing types

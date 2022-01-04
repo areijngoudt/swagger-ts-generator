@@ -4,35 +4,7 @@
 */
 /* tslint:disable */
 
-{{#if generateFormGroups}}
-import { ValidatorFn } from '@angular/forms';
-import { FormControl, FormGroup, FormArray } from '@angular/forms';
-{{/if}}
-
 export abstract class BaseModel {
-
-{{#if generateFormGroups}}
-    constructor() {
-        // define non enumerable properties so these are omitted in JSON.stringify.
-        Object.defineProperty(this, "$formGroup", {
-            get: this.getFormGroup,
-            enumerable: false,
-        });
-        Object.defineProperty(this, "_formGroup", {
-            enumerable: false,
-            writable: true,
-        });
-        Object.defineProperty(this, 'addedFormControls', {
-            get: this.getAddedFormControls,
-            enumerable: false
-        });
-        Object.defineProperty(this, '_addedFormControls', {
-            enumerable: false,
-            writable: true
-        });
-    }
-{{/if}}
-
     /**
      * set the values.
      * @param values Can be used to set a webapi response to this newly constructed model
@@ -48,7 +20,6 @@ export abstract class BaseModel {
         object: BaseModel,
         key: string,
         values: Array<T>,
-        {{#if generateFormGroups}}useFormGroupValuesToModel: boolean,{{/if}}
         type = undefined,
         subTypeFactoryFn: Function = undefined
     ): void {
@@ -57,10 +28,10 @@ export abstract class BaseModel {
             for(let value of values) {
                 if (type) {
                     if (this.isSubType(value)) {
-                        const subTypeInstance = subTypeFactoryFn(value{{#if generateFormGroups}}, useFormGroupValuesToModel{{/if}});
+                        const subTypeInstance = subTypeFactoryFn(value);
                         object[key].push(subTypeInstance);
                     } else {
-                        object[key].push(new type(value{{#if generateFormGroups}}, useFormGroupValuesToModel{{/if}}));
+                        object[key].push(new type(value));
                     }
                 } else {
                     object[key].push(value);
@@ -76,138 +47,4 @@ export abstract class BaseModel {
     protected getValue<T>(values: any, propertyName: string): T {
         return values.hasOwnProperty(propertyName) ? values[propertyName] : this[propertyName];
     }
-
-{{#if generateFormGroups}}
-    /**
-     * set the FormGroup values to the model values.
-    */
-    abstract setFormGroupValues();
-
-    /**
-     * use $formGroup in angular's formBuilder to make a model driven (reactive) form.
-     *   this.form = this.formBuilder.group({
-     *       pet: this.pet.$formGroup,
-     *   });
-    */
-    $formGroup: FormGroup;
-
-    protected _formGroup: FormGroup;
-    protected abstract getFormGroup(): FormGroup;
-
-    /**
-     * add one or more additional validators to the control
-     * @param key Name of the control (is the same as the name of the attached model property)
-     * @param validators Validator(s) to add to the control
-    */
-    addValidatorToControl(key: string, validators: ValidatorFn | ValidatorFn[]) {
-        let control = this.$formGroup.controls[key];
-        let vals: any = validators instanceof Array ? validators : [validators];
-        if (control.validator) {
-            vals.push(control.validator);
-        }
-        control.setValidators(vals);
-    }
-
-    /**
-     * add a new form control of type FormControl or FormGroup to this model.
-     * Note: arrays (FormArray) are not supported.
-     */
-    protected addFormControl(key: string, control: FormGroup | FormControl) {
-        const existingControl = this.$formGroup.controls[key];
-        if (!existingControl) {
-            this.$formGroup.addControl(key, control);
-            this._addedFormControls[key] = control;
-        } else {
-            // if a control with the given key exists, replace it (the actual given control might have been changed)
-            this.$formGroup.setControl(key, control);
-        }
-    }
-    addedFormControls;
-    protected getAddedFormControls() {
-        return this._addedFormControls;
-    }
-    private _addedFormControls = {};
-
-    /**
-     * set values in model properties for added form controls
-     * Note: arrays (FormArray) are not supported.
-     */
-    protected setValuesInAddedPropertiesOfAttachedFormControls(values: any, useFormGroupValuesToModel: boolean) {
-        const rawValues = this.getValuesToUse(values, useFormGroupValuesToModel);
-        for (const key in this.addedFormControls) {
-            if (rawValues[key]) {
-                if (useFormGroupValuesToModel) {
-                    const control = this.addedFormControls[key];
-                    if (control instanceof FormControl) {
-                        this[key] = rawValues[key];
-                    } else if (control instanceof FormGroup) {
-                        this[key].setValues(rawValues[key], useFormGroupValuesToModel);
-                    } else if (control instanceof FormArray) {
-                        throw new Error(`control of type FormArray not supported here`);
-                    } else {
-                        throw new Error(`control of type ${control} not supported here`);
-                    }
-                } else {
-                    this[key] = rawValues[key];
-                }
-            }
-        }
-    }
-
-    /**
-     * set values in added form controls
-     * Note: arrays (FormArray) are not supported.
-     */
-    protected setFormGroupValuesInAddedFormControls() {
-        for (const key in this.addedFormControls) {
-            const control = this.addedFormControls[key];
-            if (control instanceof FormControl) {
-                (<FormControl>control).setValue(this[key]);
-            } else if (control instanceof FormGroup) {
-                this[key].setFormGroupValues();
-            } else if (control instanceof FormArray) {
-                throw new Error(`control of type FormArray not supported here`);
-            } else {
-                throw new Error(`control of type ${control} not supported here`);
-            }
-        }
-    }
-
-    protected getValuesToUse(values: any, useFormGroupValuesToModel: boolean) {
-        let result = values;
-        if (useFormGroupValuesToModel) {
-            if (this.hasFormGroup(values)) {
-                result = (<any>values).$formGroup.getRawValue();
-            } else if (values instanceof FormGroup) {
-                result = (<FormGroup>values).getRawValue();
-            }
-        }
-        return result;
-    }
-    protected hasFormGroup(values: any) {
-        return !!(values.$formGroup);
-    }
-
-    protected fillFormArray<T>(key: string, modelValues: any, type = undefined): void {
-        let formArray = BaseModel.clearFormArray(this.$formGroup, key);
-        for (let modelValue of modelValues) {
-            if (type) {
-                modelValue.setFormGroupValues();
-                formArray.push((<BaseModel>modelValue).$formGroup);
-            } else {
-                const formControl = new FormControl(modelValue);
-                formArray.push(formControl);
-            }
-        }
-    }
-    private static clearFormArray(formGroup: FormGroup, key: string): FormArray {
-        if (formGroup) {
-            let formArray = <FormArray>formGroup.controls[key];
-            for (let i = formArray.length-1; i >= 0; i--) {
-                formArray.removeAt(i);
-            }
-            return formArray;
-        }
-    }
-    {{/if}}
 }

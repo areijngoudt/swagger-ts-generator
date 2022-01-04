@@ -1,25 +1,9 @@
-type Consumers = 'application/json' | 'text/json' | 'application/xml' | 'text/xml' | 'application/x-www-form-urlencoded';
-type Producers = 'application/json' | 'text/json' | 'application/xml' | 'text/xml';
-
-interface Schema {
-    $ref?: string;
-    type?: string;
-}
-
-export interface SwaggerDefinitions {
-    [namespace: string]: SwaggerDefinition;
-}
-
-export interface SwaggerDefinitionProperties {
-    [propertyName: string]: SwaggerPropertyDefinition;
-}
-
 export interface Swagger {
-    swagger: string;
+    openapi: string;
     info: {
-        version: string;
         title: string;
         description: string;
+        version: string;
     };
     host: string;
     basePath: string;
@@ -30,14 +14,54 @@ export interface Swagger {
             post: SwaggerHttpEndpoint;
             put: SwaggerHttpEndpoint;
             delete: SwaggerHttpEndpoint;
-        }
+        };
     };
-    definitions: SwaggerDefinitions;
+    components: {
+        schemas: SwaggerSchemas;
+        requestBodies: any;
+        securitySchemes: any;
+    };
+}
+
+export interface SwaggerSchemas {
+    [namespace: string]: SwaggerSchema;
+}
+
+export interface SwaggerSchema extends Schema {
+    properties: SwaggerSchemaProperties;
+    // description?: string;
+    required?: (keyof SwaggerSchemaProperties)[];
+    allOf?: SwaggerSchema[];
+    enum?: string[];
+}
+
+export interface SwaggerSchemaProperties {
+    [propertyName: string]: SwaggerPropertyDefinition;
+}
+
+export interface SwaggerPropertyDefinition extends Schema {
+    description?: string;
+    maxLength?: number;
+    minLength?: number;
+    maximum?: number;
+    minimum?: number;
+    format?: string;
+    pattern?: string;
+    items?: SwaggerSchema;
+    readonly?: boolean;
+    enum?: string[];
+}
+
+export interface Schema {
+    $ref?: string;
+    oneOf?: Schema[];
+    type?: string;
 }
 
 export interface SwaggerHttpEndpoint {
     tags: string[];
     summary?: string;
+    description?: string;
     operationId: string;
     consumes: Consumers[];
     produces: Producers[];
@@ -55,28 +79,15 @@ export interface SwaggerHttpEndpoint {
         [httpStatusCode: string]: {
             description: string;
             schema: Schema;
-        }
-    }
+        };
+    };
     deprecated: boolean;
 }
 
-export interface SwaggerDefinition extends Schema {
-    properties: SwaggerDefinitionProperties;
-    description?: string;
-    required?: (keyof SwaggerDefinitionProperties)[];
-    allOf?: SwaggerDefinition[];
-    enum?: string[];
-}
-
-export interface SwaggerPropertyDefinition extends Schema {
-    description?: string;
-    maxLength?: number;
-    minLength?: number;
-    maximum?: number;
-    minimum?: number;
-    format?: string;
-    pattern?: string;
-    items?: SwaggerDefinition;
-    readonly?: boolean;
-    enum?: string[];
-}
+type Consumers =
+    | 'application/json'
+    | 'text/json'
+    | 'application/xml'
+    | 'text/xml'
+    | 'application/x-www-form-urlencoded';
+type Producers = 'application/json' | 'text/json' | 'application/xml' | 'text/xml';

@@ -1,6 +1,6 @@
 {
     "name": "swagger-ts-generator",
-    "version": "1.2.11",
+    "version": "2.0.0",
     "description": "Given a swagger.json file, generates a number of TypeScript files which can be used as models and model-driven forms in Angular 2 (and above)",
     "main": "index.js",
     "scripts": {
@@ -9,7 +9,8 @@
         "publish-patch": "npm version patch && npm publish",
         "test": "yarn run gen && jest",
         "jest": "jest",
-        "gen": "gulp gen"
+        "gen": "gulp gen",
+        "gen-webapi-no-download": "gulp gen-webapi-no-download"
     },
     "keywords": [
         "Swagger",
@@ -29,33 +30,33 @@
     "author": "Ad Reijngoudt <areijngoudt@gmail.com>",
     "license": "ISC",
     "dependencies": {
-        "chalk": "^4.0.0",
+        "chalk": "^4.1.2",
         "fs": "0.0.2",
-        "handlebars": "^4.7.6",
-        "lodash": "^4.17.15",
-        "moment": "^2.24.0",
+        "handlebars": "^4.7.7",
+        "lodash": "^4.17.21",
+        "moment": "^2.29.1",
         "path": "^0.12.7"
     },
     "devDependencies": {
         "@types/handlebars": "^4.1.0",
-        "@types/jest": "^24.9.1",
-        "@types/lodash": "^4.14.150",
-        "@types/node": "^10.17.20",
-        "gulp": "^4.0.0",
-        "gulp-exec": "^3.0.1",
-        "gulp-jsbeautifier": "^2.1.0",
-        "gulp-load-plugins": "^1.5.0",
-        "gulp-notify": "^3.0.0",
-        "gulp-plumber": "^1.1.0",
+        "@types/jest": "^27.4.0",
+        "@types/lodash": "^4.14.178",
+        "@types/node": "^16.11.18",
+        "gulp": "^4.0.2",
+        "gulp-exec": "^5.0.0",
+        "gulp-jsbeautifier": "^3.0.1",
+        "gulp-load-plugins": "^2.0.7",
+        "gulp-notify": "^4.0.0",
+        "gulp-plumber": "^1.2.1",
         "gulp-streamify": "^1.0.2",
         "gulp-task-listing": "^1.1.0",
         "gulp-util": "^3.0.8",
-        "jest": "^24.9.0",
+        "jest": "^27.4.5",
         "request": "^2.88.2",
-        "ts-jest": "^24.1.0",
-        "typescript": "^2.9.1",
+        "ts-jest": "^27.1.2",
+        "typescript": "~4.3.5",
         "util": "^0.12.2",
         "vinyl-source-stream": "^2.0.0",
-        "yargs": "^14.2.3"
+        "yargs": "^17.3.1"
     }
 }
