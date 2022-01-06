@@ -74,6 +74,7 @@ export class {{{typeName}}} extends {{#if isSubType}}{{{baseType.typeName}}}{{el
     */
     setValues(values: Partial<I{{{typeName}}}>): void {
         if (values) {
+            {{#if isSubType}}super.setValues(values){{/if}}
             const rawValues = values
 {{#properties}}
     {{#if isArray}}
